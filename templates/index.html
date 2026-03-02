@@ -3,794 +3,638 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HookViral - Instagram Hook Analyzer & Generator</title>
+    <title>HookViral - Complete Instagram Viral Toolkit</title>
+    <meta name="description" content="Analyze hooks, discover trending songs, study viral reels, and master the Instagram algorithm. Backed by real data.">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg:#050505;--surface:#111;--surface2:#1a1a1a;--surface3:#222;
+            --border:#2a2a2a;--border-hover:#444;
+            --text:#f0f0f0;--text-dim:#888;--text-muted:#555;
+            --pink:#E1306C;--purple:#833AB4;--orange:#F77737;--gold:#FFD700;
+            --green:#22c55e;--blue:#3b82f6;--yellow:#eab308;--red:#ef4444;--cyan:#06b6d4;
+            --gradient:linear-gradient(135deg,#833AB4,#E1306C,#F77737);
+        }
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-        :root {
-            --bg: #0a0a0a;
-            --surface: #141414;
-            --surface2: #1e1e1e;
-            --border: #2a2a2a;
-            --text: #e5e5e5;
-            --text-dim: #888;
-            --accent: #E1306C;
-            --accent2: #833AB4;
-            --accent3: #F77737;
-            --green: #22c55e;
-            --blue: #3b82f6;
-            --yellow: #eab308;
-            --red: #ef4444;
+        /* ─── HEADER ─── */
+        .hero{text-align:center;padding:48px 20px 24px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 50%,rgba(131,58,180,0.08),transparent 50%),radial-gradient(circle at 70% 50%,rgba(225,48,108,0.06),transparent 50%);pointer-events:none}
+        .hero h1{font-size:2.8rem;font-weight:900;background:var(--gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1.5px;position:relative}
+        .hero .tagline{color:var(--text-dim);margin-top:8px;font-size:1.05rem;position:relative}
+        .hero .stats-bar{display:flex;justify-content:center;gap:24px;margin-top:20px;flex-wrap:wrap;position:relative}
+        .hero .stat-pill{padding:6px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;font-size:0.8rem;color:var(--text-dim)}
+        .hero .stat-pill b{color:var(--pink);font-weight:700}
+
+        /* ─── NAVIGATION ─── */
+        .nav{display:flex;justify-content:center;gap:4px;padding:8px 16px;max-width:900px;margin:0 auto;flex-wrap:wrap;position:sticky;top:0;z-index:50;background:rgba(5,5,5,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+        .nav-btn{padding:10px 18px;border-radius:10px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;font-size:0.85rem;font-weight:600;transition:all 0.2s;position:relative}
+        .nav-btn:hover{color:var(--text);background:var(--surface2)}
+        .nav-btn.active{color:white;background:var(--surface2)}
+        .nav-btn.active::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:20px;height:3px;background:var(--gradient);border-radius:2px}
+        .nav-btn .badge{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--pink);border-radius:50%;animation:pulse 2s infinite}
+        .nav-btn.pro-tag::before{content:'PRO';position:absolute;top:2px;right:2px;font-size:0.55rem;padding:1px 5px;background:var(--gradient);border-radius:4px;color:white;font-weight:800}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+        /* ─── CONTAINER ─── */
+        .container{max-width:850px;margin:0 auto;padding:0 16px 80px}
+        .panel{display:none}.panel.active{display:block}
+
+        /* ─── CARDS ─── */
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;transition:border-color 0.2s}
+        .card:hover{border-color:var(--border-hover)}
+        .card h2{font-size:1.15rem;font-weight:700;margin-bottom:12px}
+        .card-accent{border-color:rgba(225,48,108,0.3)}
+        .card-glow{box-shadow:0 0 30px rgba(225,48,108,0.05)}
+
+        /* ─── FORMS ─── */
+        textarea,select,input[type="text"]{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:0.95rem;font-family:inherit;outline:none;transition:border-color 0.2s}
+        textarea:focus,select:focus,input:focus{border-color:var(--pink)}
+        textarea{resize:vertical;min-height:80px}
+        label{display:block;margin-bottom:6px;color:var(--text-dim);font-size:0.85rem;font-weight:500}
+        .form-group{margin-bottom:14px}
+        .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+        /* ─── BUTTONS ─── */
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;border:none;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;justify-content:center}
+        .btn-primary{background:var(--gradient);color:white}
+        .btn-primary:hover{opacity:0.9;transform:translateY(-1px);box-shadow:0 4px 20px rgba(225,48,108,0.3)}
+        .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+        .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text-dim)}
+        .btn-outline:hover{border-color:var(--pink);color:var(--text)}
+
+        /* ─── SCORE DISPLAY ─── */
+        .score-ring{width:130px;height:130px;border-radius:50%;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;border:4px solid var(--border);margin-bottom:10px;position:relative}
+        .score-ring::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(var(--pink) calc(var(--pct)*3.6deg),transparent 0);mask:radial-gradient(farthest-side,transparent calc(100% - 4px),black calc(100% - 4px));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),black calc(100% - 4px))}
+        .score-num{font-size:2.5rem;font-weight:900;line-height:1;z-index:1}
+        .score-lbl{font-size:0.7rem;font-weight:700;letter-spacing:1px;z-index:1;margin-top:2px}
+        .green .score-num,.green .score-lbl{color:var(--green)}.blue .score-num,.blue .score-lbl{color:var(--blue)}
+        .yellow .score-num,.yellow .score-lbl{color:var(--yellow)}.red .score-num,.red .score-lbl{color:var(--red)}
+
+        /* ─── BREAKDOWN ─── */
+        .bd-item{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+        .bd-label{font-size:0.8rem;color:var(--text-dim);width:100px;flex-shrink:0}
+        .bd-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+        .bd-fill{height:100%;border-radius:3px;background:var(--gradient);transition:width 0.6s}
+        .bd-val{font-size:0.8rem;font-weight:600;width:30px;text-align:right}
+
+        /* ─── TIPS ─── */
+        .tip{display:flex;gap:8px;padding:10px 14px;background:var(--surface2);border-radius:8px;margin-bottom:6px;font-size:0.85rem;border-left:3px solid var(--pink)}
+
+        /* ─── HOOK RESULTS ─── */
+        .hook-card{padding:14px;background:var(--surface2);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);cursor:pointer;transition:all 0.2s}
+        .hook-card:hover{border-color:var(--pink);transform:translateX(3px)}
+        .hook-card .text{font-size:0.95rem;line-height:1.5;margin-bottom:6px;font-weight:500}
+        .hook-card .meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .tag{padding:3px 8px;border-radius:5px;font-size:0.7rem;font-weight:700}
+        .tag-pink{background:rgba(225,48,108,0.12);color:var(--pink)}
+        .tag-blue{background:rgba(59,130,246,0.12);color:var(--blue)}
+        .tag-green{background:rgba(34,197,94,0.12);color:var(--green)}
+        .tag-orange{background:rgba(247,119,55,0.12);color:var(--orange)}
+        .tag-purple{background:rgba(131,58,180,0.12);color:var(--purple)}
+        .tag-gold{background:rgba(255,215,0,0.1);color:var(--gold)}
+        .emotions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+        .emotion-tag{padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:500;background:rgba(131,58,180,0.1);color:var(--purple)}
+
+        /* ─── SONG CARDS ─── */
+        .song-card{display:flex;gap:14px;padding:14px;background:var(--surface2);border-radius:12px;margin-bottom:8px;border:1px solid var(--border);transition:border-color 0.2s;align-items:flex-start}
+        .song-card:hover{border-color:var(--pink)}
+        .song-icon{width:44px;height:44px;border-radius:10px;background:var(--gradient);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;color:white;font-weight:800}
+        .song-info{flex:1}
+        .song-title{font-weight:700;font-size:0.95rem}
+        .song-artist{color:var(--text-dim);font-size:0.8rem;margin-top:2px}
+        .song-stats{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+        .song-use{font-size:0.8rem;color:var(--text-dim);margin-top:6px;line-height:1.4}
+        .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+        .status-mega{background:var(--gold)}.status-hot{background:var(--red)}.status-rising{background:var(--green)}.status-steady{background:var(--blue)}
+
+        /* ─── VIRAL REEL CARDS ─── */
+        .reel-card{padding:18px;background:var(--surface2);border-radius:12px;margin-bottom:10px;border:1px solid var(--border);transition:border-color 0.2s}
+        .reel-card:hover{border-color:var(--purple)}
+        .reel-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+        .reel-creator{font-weight:700;font-size:1rem}
+        .reel-views{font-size:0.85rem;font-weight:700;color:var(--pink)}
+        .reel-hook{font-size:0.9rem;color:var(--text);padding:10px;background:var(--bg);border-radius:8px;margin:8px 0;border-left:3px solid var(--green);font-style:italic}
+        .reel-why{font-size:0.85rem;color:var(--text-dim);margin-bottom:8px;line-height:1.5}
+        .reel-takeaway{font-size:0.85rem;padding:10px 12px;background:rgba(131,58,180,0.06);border-radius:8px;border:1px solid rgba(131,58,180,0.15);line-height:1.5}
+        .reel-takeaway b{color:var(--purple)}
+
+        /* ─── ALGORITHM STATS ─── */
+        .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+        .stat-box{text-align:center;padding:16px 10px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)}
+        .stat-box .big{font-size:1.6rem;font-weight:900;background:var(--gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .stat-box .label{font-size:0.75rem;color:var(--text-dim);margin-top:4px;line-height:1.3}
+        .factor-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px}
+        .factor-name{font-weight:600;font-size:0.9rem;flex:1}
+        .factor-weight{font-size:0.75rem;font-weight:700;padding:3px 8px;border-radius:4px}
+
+        /* ─── A/B TEST ─── */
+        .ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .ab-card{background:var(--surface2);border-radius:12px;padding:18px;border:2px solid var(--border)}
+        .ab-card.winner{border-color:var(--green)}.ab-card.loser{opacity:0.7}
+        .ab-lbl{font-size:0.8rem;font-weight:800;letter-spacing:1px;margin-bottom:6px;text-transform:uppercase}
+        .ab-lbl.a{color:var(--pink)}.ab-lbl.b{color:var(--blue)}
+        .verdict-box{text-align:center;padding:20px;background:var(--surface2);border-radius:12px;margin:16px 0;border:2px solid var(--green)}
+        .verdict-box h3{font-size:1.4rem;font-weight:900;margin-bottom:4px}
+        .comp-row{display:grid;grid-template-columns:90px 1fr 32px 1fr 32px;gap:6px;align-items:center;margin-bottom:8px;padding:8px 10px;background:var(--surface2);border-radius:8px;font-size:0.8rem}
+        .comp-bar{height:6px;border-radius:3px;overflow:hidden;background:var(--bg)}
+        .comp-fill-a{height:100%;border-radius:3px;background:var(--gradient);transition:width 0.5s}
+        .comp-fill-b{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),#60a5fa);transition:width 0.5s}
+        .comp-val{font-weight:700;text-align:center}.comp-val.win{color:var(--green)}
+
+        /* ─── PAYWALL ─── */
+        .paywall-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+        .paywall-overlay.show{display:flex}
+        .paywall-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:480px;width:100%;text-align:center;position:relative}
+        .paywall-card h2{font-size:1.5rem;font-weight:900;margin-bottom:8px}
+        .paywall-card .price{font-size:2.5rem;font-weight:900;background:var(--gradient);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin:16px 0 4px}
+        .paywall-card .price-sub{color:var(--text-dim);font-size:0.85rem;margin-bottom:20px}
+        .paywall-features{text-align:left;margin-bottom:24px}
+        .paywall-features .feat{display:flex;gap:8px;align-items:center;padding:8px 0;font-size:0.9rem;border-bottom:1px solid var(--border)}
+        .paywall-features .feat:last-child{border:none}
+        .paywall-features .check{color:var(--green);font-weight:bold;font-size:1.1rem}
+        .paywall-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text-dim);font-size:1.2rem;cursor:pointer}
+        .usage-bar{margin-top:12px;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:0.8rem;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center}
+        .usage-bar .count{color:var(--pink);font-weight:700}
+        .upgrade-link{color:var(--pink);text-decoration:underline;cursor:pointer;font-weight:600}
+
+        /* ─── TOAST ─── */
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);padding:10px 20px;border-radius:10px;font-weight:600;font-size:0.9rem;transition:transform 0.3s;z-index:200}
+        .toast.show{transform:translateX(-50%) translateY(0)}
+        .toast-green{background:var(--green);color:white}
+        .toast-yellow{background:var(--yellow);color:black}
+
+        /* ─── RESPONSIVE ─── */
+        @media(max-width:640px){
+            .hero h1{font-size:2rem}
+            .row,.ab-grid{grid-template-columns:1fr}
+            .stat-grid{grid-template-columns:repeat(2,1fr)}
+            .comp-row{grid-template-columns:70px 1fr 26px 1fr 26px;font-size:0.7rem}
+            .nav-btn{padding:8px 12px;font-size:0.8rem}
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        .header {
-            text-align: center;
-            padding: 40px 20px 20px;
-            background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 50%, var(--accent3) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
-        }
-
-        .header p { color: var(--text-dim); margin-top: 8px; font-size: 1.05rem; }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            padding: 24px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-dim);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .tab:hover { border-color: var(--accent); color: var(--text); }
-        .tab.active {
-            background: linear-gradient(135deg, var(--accent2), var(--accent));
-            border-color: transparent;
-            color: white;
-        }
-
-        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
-        .panel { display: none; }
-        .panel.active { display: block; }
-
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 20px;
-        }
-
-        .card h2 { font-size: 1.2rem; margin-bottom: 16px; font-weight: 600; }
-
-        textarea, select, input[type="text"] {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--surface2);
-            color: var(--text);
-            font-size: 1rem;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        textarea:focus, select:focus, input[type="text"]:focus { border-color: var(--accent); }
-        textarea { resize: vertical; min-height: 100px; }
-
-        label { display: block; margin-bottom: 8px; color: var(--text-dim); font-size: 0.9rem; font-weight: 500; }
-        .form-group { margin-bottom: 16px; }
-        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-        .btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 14px 28px; border-radius: 12px; border: none;
-            font-size: 1rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; width: 100%; justify-content: center;
-        }
-
-        .btn-primary { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: white; }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        .score-container { text-align: center; padding: 32px 0; }
-
-        .score-circle {
-            width: 140px; height: 140px; border-radius: 50%;
-            display: inline-flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            border: 4px solid var(--border); margin-bottom: 12px;
-        }
-
-        .score-circle.green { border-color: var(--green); }
-        .score-circle.blue { border-color: var(--blue); }
-        .score-circle.yellow { border-color: var(--yellow); }
-        .score-circle.red { border-color: var(--red); }
-
-        .score-number { font-size: 2.8rem; font-weight: 800; line-height: 1; }
-        .score-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; margin-top: 4px; }
-
-        .green .score-number, .green .score-label { color: var(--green); }
-        .blue .score-number, .blue .score-label { color: var(--blue); }
-        .yellow .score-number, .yellow .score-label { color: var(--yellow); }
-        .red .score-number, .red .score-label { color: var(--red); }
-
-        .breakdown { margin-top: 20px; }
-
-        .breakdown-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-
-        .breakdown-label {
-            font-size: 0.85rem; color: var(--text-dim);
-            width: 110px; flex-shrink: 0; text-transform: capitalize;
-        }
-
-        .breakdown-bar { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
-
-        .breakdown-fill {
-            height: 100%; border-radius: 4px;
-            background: linear-gradient(90deg, var(--accent2), var(--accent));
-            transition: width 0.6s ease;
-        }
-
-        .breakdown-value { font-size: 0.85rem; font-weight: 600; width: 36px; text-align: right; }
-
-        .tip {
-            display: flex; gap: 10px; padding: 12px 16px;
-            background: var(--surface2); border-radius: 10px;
-            margin-bottom: 8px; font-size: 0.9rem;
-            border-left: 3px solid var(--accent);
-        }
-
-        .tip-icon { font-size: 1.1rem; flex-shrink: 0; }
-
-        .hook-result {
-            padding: 16px; background: var(--surface2);
-            border-radius: 12px; margin-bottom: 10px;
-            border: 1px solid var(--border); cursor: pointer;
-            transition: all 0.2s; position: relative;
-        }
-
-        .hook-result:hover { border-color: var(--accent); transform: translateX(4px); }
-
-        .hook-text { font-size: 1rem; line-height: 1.5; margin-bottom: 8px; font-weight: 500; }
-        .hook-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-
-        .hook-tag {
-            padding: 4px 10px; border-radius: 6px;
-            font-size: 0.75rem; font-weight: 600;
-            background: rgba(225, 48, 108, 0.15); color: var(--accent);
-        }
-
-        .hook-source-tag {
-            padding: 4px 10px; border-radius: 6px;
-            font-size: 0.75rem; font-weight: 600;
-            background: rgba(59, 130, 246, 0.15); color: var(--blue);
-        }
-
-        .hook-score-small { font-size: 0.8rem; color: var(--green); font-weight: 600; }
-
-        .copied-toast {
-            position: fixed; bottom: 30px; left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--green); color: white;
-            padding: 12px 24px; border-radius: 10px; font-weight: 600;
-            transition: transform 0.3s ease; z-index: 100;
-        }
-
-        .copied-toast.show { transform: translateX(-50%) translateY(0); }
-
-        .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        .type-card {
-            padding: 16px; background: var(--surface2);
-            border-radius: 12px; border: 1px solid var(--border);
-        }
-
-        .type-card h3 { font-size: 0.95rem; margin-bottom: 6px; color: var(--accent); }
-        .type-card p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; }
-
-        .type-card .example {
-            margin-top: 10px; padding: 10px; background: var(--bg);
-            border-radius: 8px; font-size: 0.85rem; font-style: italic; color: var(--text);
-        }
-
-        .spinner {
-            display: inline-block; width: 24px; height: 24px;
-            border: 3px solid var(--border); border-top-color: var(--accent);
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .emotions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-
-        .emotion-tag {
-            padding: 4px 12px; border-radius: 20px;
-            font-size: 0.8rem; font-weight: 500;
-            background: rgba(131, 58, 180, 0.15); color: var(--accent2);
-        }
-
-        #results, #genResults, #trendResults, #abResults { display: none; }
-
-        /* Trending Styles */
-        .trend-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 14px; background: var(--surface2);
-            border-radius: 10px; margin-bottom: 6px;
-            border: 1px solid var(--border); font-size: 0.9rem;
-        }
-
-        .trend-title { flex: 1; font-weight: 500; }
-        .trend-source { font-size: 0.75rem; color: var(--text-dim); margin-left: 12px; }
-
-        .keyword-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-
-        .keyword-tag {
-            padding: 6px 14px; border-radius: 20px;
-            font-size: 0.8rem; font-weight: 500;
-            background: rgba(247, 119, 55, 0.15); color: var(--accent3);
-            border: 1px solid rgba(247, 119, 55, 0.25);
-        }
-
-        .fetch-time { font-size: 0.8rem; color: var(--text-dim); margin-top: 12px; text-align: right; }
-
-        /* A/B Test Styles */
-        .ab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-        .ab-card {
-            background: var(--surface2); border-radius: 14px;
-            padding: 20px; border: 2px solid var(--border);
-            transition: border-color 0.3s;
-        }
-
-        .ab-card.winner { border-color: var(--green); }
-        .ab-card.loser { border-color: var(--border); opacity: 0.8; }
-
-        .ab-label {
-            font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
-            margin-bottom: 8px; text-transform: uppercase;
-        }
-
-        .ab-label.a { color: var(--accent); }
-        .ab-label.b { color: var(--blue); }
-
-        .ab-hook-text { font-size: 1rem; font-weight: 500; line-height: 1.5; margin-bottom: 16px; }
-
-        .ab-score {
-            font-size: 2rem; font-weight: 800; text-align: center;
-            margin-bottom: 4px;
-        }
-
-        .ab-rating { text-align: center; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; }
-
-        .verdict-card {
-            text-align: center; padding: 24px;
-            background: var(--surface2); border-radius: 14px;
-            margin: 20px 0; border: 2px solid var(--green);
-        }
-
-        .verdict-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
-        .verdict-detail { color: var(--text-dim); font-size: 0.95rem; }
-
-        .comparison-row {
-            display: grid; grid-template-columns: 100px 1fr 40px 1fr 40px;
-            gap: 8px; align-items: center; margin-bottom: 10px;
-            padding: 10px 14px; background: var(--surface2);
-            border-radius: 10px;
-        }
-
-        .comp-cat { font-size: 0.85rem; color: var(--text-dim); font-weight: 500; }
-
-        .comp-bar {
-            height: 8px; border-radius: 4px; overflow: hidden;
-            background: var(--bg);
-        }
-
-        .comp-fill-a {
-            height: 100%; border-radius: 4px;
-            background: linear-gradient(90deg, var(--accent2), var(--accent));
-            transition: width 0.6s;
-        }
-
-        .comp-fill-b {
-            height: 100%; border-radius: 4px;
-            background: linear-gradient(90deg, var(--blue), #60a5fa);
-            transition: width 0.6s;
-        }
-
-        .comp-val { font-size: 0.85rem; font-weight: 600; text-align: center; }
-        .comp-val.winning { color: var(--green); }
-
-        @media (max-width: 600px) {
-            .header h1 { font-size: 1.8rem; }
-            .row, .ab-grid { grid-template-columns: 1fr; }
-            .type-grid { grid-template-columns: 1fr; }
-            .comparison-row { grid-template-columns: 80px 1fr 30px 1fr 30px; font-size: 0.75rem; }
-        }
+        /* ─── BROWSE LIBRARY ─── */
+        .lib-section{margin-bottom:20px}
+        .lib-section h3{font-size:1.05rem;color:var(--pink);margin-bottom:10px;font-weight:700}
+        .example-card{padding:10px 14px;background:var(--surface2);border-radius:8px;margin-bottom:6px;border-left:3px solid var(--green);cursor:pointer;transition:all 0.2s}
+        .example-card:hover{transform:translateX(3px);border-left-color:var(--pink)}
+        .example-card .hook{font-weight:600;font-size:0.9rem;margin-bottom:4px}
+        .example-card .perf{font-size:0.78rem;color:var(--green)}
+        .example-card .src{font-size:0.7rem;color:var(--text-muted)}
+        .template-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+        .template-chip{padding:4px 10px;background:var(--bg);border-radius:6px;font-size:0.75rem;cursor:pointer;border:1px solid var(--border);transition:border-color 0.2s}
+        .template-chip:hover{border-color:var(--pink)}
     </style>
 </head>
 <body>
 
-<div class="header">
+<!-- HERO -->
+<div class="hero">
     <h1>HookViral</h1>
-    <p>Analyze & generate viral Instagram hooks backed by data</p>
+    <p class="tagline">The Complete Instagram Viral Toolkit</p>
+    <div class="stats-bar">
+        <span class="stat-pill"><b>200B+</b> daily Reel views</span>
+        <span class="stat-pill"><b>72%</b> more viral with 3s hook</span>
+        <span class="stat-pill"><b>42%</b> higher engagement with trending audio</span>
+    </div>
 </div>
 
-<div class="tabs">
-    <div class="tab active" onclick="switchTab('analyze')">Analyze</div>
-    <div class="tab" onclick="switchTab('generate')">Generate</div>
-    <div class="tab" onclick="switchTab('trending')">Trending</div>
-    <div class="tab" onclick="switchTab('abtest')">A/B Test</div>
-    <div class="tab" onclick="switchTab('browse')">Library</div>
+<!-- NAV -->
+<div class="nav">
+    <button class="nav-btn active" onclick="switchTab('analyze')">Analyze</button>
+    <button class="nav-btn" onclick="switchTab('generate')">Generate</button>
+    <button class="nav-btn" onclick="switchTab('songs')">Songs<span class="badge"></span></button>
+    <button class="nav-btn" onclick="switchTab('viral')">Viral Reels</button>
+    <button class="nav-btn" onclick="switchTab('trending')">Trending</button>
+    <button class="nav-btn pro-tag" onclick="switchTab('abtest')">A/B Test</button>
+    <button class="nav-btn pro-tag" onclick="switchTab('algorithm')">Algorithm</button>
+    <button class="nav-btn" onclick="switchTab('browse')">Library</button>
 </div>
 
 <div class="container">
 
-    <!-- ANALYZE TAB -->
-    <div id="analyzePanel" class="panel active">
-        <div class="card">
-            <h2>Paste your hook below</h2>
-            <div class="form-group">
-                <textarea id="hookInput" placeholder="e.g. Nobody talks about this fitness hack but it changed my life in 30 days..."></textarea>
-            </div>
-            <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeHook()">Analyze Viral Potential</button>
+<!-- ═══ ANALYZE ═══ -->
+<div id="analyzePanel" class="panel active">
+    <div class="card">
+        <h2>Score your hook's viral potential</h2>
+        <div class="form-group">
+            <textarea id="hookInput" placeholder="Paste your Instagram hook here... e.g. 'Nobody talks about this fitness hack but it changed my life in 30 days'"></textarea>
         </div>
-
-        <div id="results">
-            <div class="card">
-                <div class="score-container">
-                    <div class="score-circle" id="scoreCircle">
-                        <div class="score-number" id="scoreNumber">--</div>
-                        <div class="score-label" id="scoreLabel">SCORE</div>
-                    </div>
-                    <div class="emotions" id="emotionTags"></div>
-                </div>
-                <div class="breakdown" id="breakdown"></div>
-            </div>
-            <div class="card">
-                <h2>Improvement Tips</h2>
-                <div id="tips"></div>
-            </div>
-        </div>
+        <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeHook()">Analyze Hook</button>
     </div>
-
-    <!-- GENERATE TAB -->
-    <div id="generatePanel" class="panel">
-        <div class="card">
-            <h2>Generate viral hooks for your niche</h2>
-            <div class="row">
-                <div class="form-group">
-                    <label>Your Niche</label>
-                    <select id="nicheSelect">
-                        {% for niche in niches %}
-                        <option value="{{ niche }}">{{ niche|title }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Hook Style (optional)</label>
-                    <select id="typeSelect">
-                        <option value="">All Styles</option>
-                        {% for key, data in hook_types.items() %}
-                        <option value="{{ key }}">{{ data.label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+    <div id="results" style="display:none">
+        <div class="card card-glow" style="text-align:center;padding:28px">
+            <div class="score-ring" id="scoreCircle" style="--pct:0">
+                <div class="score-num" id="scoreNum">--</div>
+                <div class="score-lbl" id="scoreLbl">SCORE</div>
             </div>
-            <button class="btn btn-primary" id="generateBtn" onclick="generateHooks()">Generate 10 Hooks</button>
+            <div class="emotions" id="emotionTags" style="justify-content:center"></div>
+            <div id="breakdown" style="margin-top:20px;text-align:left"></div>
         </div>
-
-        <div id="genResults">
-            <div class="card">
-                <h2>Your Generated Hooks <span style="color:var(--text-dim);font-weight:400;font-size:0.85rem;">(click to copy)</span></h2>
-                <div id="hooksList"></div>
-            </div>
-        </div>
+        <div class="card"><h2>How to improve</h2><div id="tips"></div></div>
     </div>
+</div>
 
-    <!-- TRENDING TAB -->
-    <div id="trendingPanel" class="panel">
-        <div class="card">
-            <h2>Trending Hooks (Real-Time)</h2>
-            <p style="color:var(--text-dim);margin-bottom:16px;">Fetches what's trending right now and generates hooks you can post today.</p>
+<!-- ═══ GENERATE ═══ -->
+<div id="generatePanel" class="panel">
+    <div class="card">
+        <h2>Generate hooks for your niche</h2>
+        <div class="row">
             <div class="form-group">
-                <label>Your Niche (optional — hooks will be tailored)</label>
-                <select id="trendNicheSelect">
-                    <option value="">General / Any Niche</option>
-                    {% for niche in niches %}
-                    <option value="{{ niche }}">{{ niche|title }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button class="btn btn-primary" id="trendBtn" onclick="fetchTrending()">Fetch Trending Hooks</button>
-        </div>
-
-        <div id="trendResults">
-            <div class="card">
-                <h2>What's Trending Right Now</h2>
-                <div id="trendingTopics"></div>
-                <div class="fetch-time" id="fetchTime"></div>
-            </div>
-
-            <div class="card">
-                <h2>Trending Keywords</h2>
-                <div class="keyword-cloud" id="keywordCloud"></div>
-            </div>
-
-            <div class="card">
-                <h2>Hooks Based on Trends <span style="color:var(--text-dim);font-weight:400;font-size:0.85rem;">(click to copy)</span></h2>
-                <div id="trendHooksList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- A/B TEST TAB -->
-    <div id="abtestPanel" class="panel">
-        <div class="card">
-            <h2>A/B Test Your Hooks</h2>
-            <p style="color:var(--text-dim);margin-bottom:16px;">Compare two hooks head-to-head. Find out which one will perform better.</p>
-            <div class="form-group">
-                <label>Hook A</label>
-                <textarea id="hookA" style="min-height:70px" placeholder="Enter your first hook..."></textarea>
+                <label>Niche</label>
+                <select id="nicheSelect">{% for n in niches %}<option value="{{n}}">{{n|title}}</option>{% endfor %}</select>
             </div>
             <div class="form-group">
-                <label>Hook B</label>
-                <textarea id="hookB" style="min-height:70px" placeholder="Enter your second hook..."></textarea>
-            </div>
-            <button class="btn btn-primary" id="abBtn" onclick="runABTest()">Compare Hooks</button>
-        </div>
-
-        <div id="abResults">
-            <!-- Verdict -->
-            <div class="verdict-card" id="verdictCard">
-                <div class="verdict-title" id="verdictTitle"></div>
-                <div class="verdict-detail" id="verdictDetail"></div>
-            </div>
-
-            <!-- Side by side scores -->
-            <div class="ab-grid">
-                <div class="ab-card" id="abCardA">
-                    <div class="ab-label a">Hook A</div>
-                    <div class="ab-hook-text" id="abTextA"></div>
-                    <div class="ab-score" id="abScoreA"></div>
-                    <div class="ab-rating" id="abRatingA"></div>
-                    <div class="emotions" id="abEmotionsA" style="margin-top:12px;justify-content:center;"></div>
-                </div>
-                <div class="ab-card" id="abCardB">
-                    <div class="ab-label b">Hook B</div>
-                    <div class="ab-hook-text" id="abTextB"></div>
-                    <div class="ab-score" id="abScoreB"></div>
-                    <div class="ab-rating" id="abRatingB"></div>
-                    <div class="emotions" id="abEmotionsB" style="margin-top:12px;justify-content:center;"></div>
-                </div>
-            </div>
-
-            <!-- Category comparison -->
-            <div class="card" style="margin-top:20px;">
-                <h2>Category Breakdown</h2>
-                <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-                    <span style="font-size:0.8rem;color:var(--accent);font-weight:600;">HOOK A</span>
-                    <span style="font-size:0.8rem;color:var(--blue);font-weight:600;">HOOK B</span>
-                </div>
-                <div id="abComparison"></div>
-            </div>
-
-            <!-- Recommendations -->
-            <div class="card">
-                <h2>Recommendations</h2>
-                <div id="abTips"></div>
+                <label>Style (optional)</label>
+                <select id="typeSelect"><option value="">All Styles</option>{% for k,d in hook_types.items() %}<option value="{{k}}">{{d.label}}</option>{% endfor %}</select>
             </div>
         </div>
+        <button class="btn btn-primary" id="genBtn" onclick="generateHooks()">Generate 10 Hooks</button>
     </div>
+    <div id="genResults" style="display:none">
+        <div class="card"><h2>Your Hooks <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">click to copy</span></h2><div id="hooksList"></div></div>
+    </div>
+</div>
 
-    <!-- BROWSE TAB -->
-    <div id="browsePanel" class="panel">
-        <div class="card" style="border-color:var(--accent);margin-bottom:24px;">
-            <h2>Research-Backed Hook Library</h2>
-            <p style="color:var(--text-dim);margin-bottom:12px;">Every formula below is backed by real performance data from viral Instagram content.</p>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                <span class="keyword-tag" style="background:rgba(225,48,108,0.1);color:var(--accent);border-color:rgba(225,48,108,0.2);">8.25s avg attention span</span>
-                <span class="keyword-tag" style="background:rgba(225,48,108,0.1);color:var(--accent);border-color:rgba(225,48,108,0.2);">70-80% hold rate for top hooks</span>
-                <span class="keyword-tag" style="background:rgba(225,48,108,0.1);color:var(--accent);border-color:rgba(225,48,108,0.2);">5-10x more reach with strong hooks</span>
-            </div>
-        </div>
-
-        {% for key, data in hook_types.items() %}
-        <div class="card">
-            <h2 style="color:var(--accent);font-size:1.3rem;">{{ data.label }}</h2>
-            <p style="color:var(--text-dim);margin-bottom:6px;">{{ data.description }}</p>
-            {% if data.research_note %}
-            <p style="color:var(--text-dim);font-size:0.8rem;font-style:italic;margin-bottom:16px;border-left:2px solid var(--accent2);padding-left:10px;">{{ data.research_note }}</p>
-            {% endif %}
-
-            {% if data.real_examples %}
-            <div style="margin-bottom:16px;">
-                <label style="font-size:0.85rem;font-weight:600;color:var(--green);margin-bottom:10px;">Real Viral Examples</label>
-                {% for ex in data.real_examples %}
-                <div style="padding:12px 16px;background:var(--surface2);border-radius:10px;margin-bottom:8px;border-left:3px solid var(--green);cursor:pointer;" onclick="copyHook('{{ ex.hook | replace("'", "\\'") }}')">
-                    <div style="font-weight:600;font-size:0.95rem;margin-bottom:6px;">"{{ ex.hook }}"</div>
-                    <div style="font-size:0.8rem;color:var(--green);margin-bottom:4px;">{{ ex.performance }}</div>
-                    <div style="font-size:0.75rem;color:var(--text-dim);">Source: {{ ex.source }}</div>
+<!-- ═══ TRENDING SONGS ═══ -->
+<div id="songsPanel" class="panel">
+    <div class="card card-accent">
+        <h2>Trending Songs This Week</h2>
+        <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Using trending audio gets <b style="color:var(--pink)">42% higher engagement</b>. These are the hottest tracks right now.</p>
+        {% for s in trending_songs %}
+        <div class="song-card">
+            <div class="song-icon">{{loop.index}}</div>
+            <div class="song-info">
+                <div class="song-title">{{s.title}}</div>
+                <div class="song-artist">{{s.artist}}</div>
+                <div class="song-stats">
+                    <span class="tag tag-pink">{{s.reels_count}}</span>
+                    <span class="tag tag-purple">{{s.vibe}}</span>
+                    <span class="tag {% if s.status=='mega' %}tag-gold{% elif s.status=='hot' %}tag-orange{% elif s.status=='rising' %}tag-green{% else %}tag-blue{% endif %}">
+                        <span class="status-dot status-{{s.status}}"></span>{{s.status|upper}}
+                    </span>
                 </div>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dim);margin-bottom:8px;">Hook Templates (click to copy)</label>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                {% for t in data.templates %}
-                <span style="padding:6px 12px;background:var(--surface2);border-radius:8px;font-size:0.8rem;cursor:pointer;border:1px solid var(--border);transition:border-color 0.2s;" onclick="copyHook('{{ t | replace("'", "\\'") }}')" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">"{{ t }}"</span>
-                {% endfor %}
+                <div class="song-use"><b>Best for:</b> {{s.best_for|join(', ')}}</div>
+                <div class="song-use" style="color:var(--green)"><b>Tip:</b> {{s.tip}}</div>
             </div>
         </div>
         {% endfor %}
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:12px">Sources: Dash Social, Buffer, HeyOrca, Later.com (Feb/Mar 2026)</p>
+    </div>
+</div>
 
-        <div class="card" style="border-color:var(--blue);">
-            <h2>Data Sources</h2>
-            <div style="font-size:0.85rem;color:var(--text-dim);line-height:1.8;">
-                <div>Opus.pro — Instagram Reels Hook Formulas (3-second hold rate research)</div>
-                <div>Torro.io — 100+ Best Hooks for Instagram Reels 2026</div>
-                <div>TheDesignsFirm — 51 Viral Reel Hooks with 2026 Examples</div>
-                <div>Vexub — 20 Viral Video Hooks That Stop the Scroll 2026</div>
-                <div>ContentStudio — 30+ Proven Examples from Top Creators</div>
-                <div>Insense.pro — Must-Try Instagram Reel Hooks for 2026</div>
+<!-- ═══ VIRAL REELS ═══ -->
+<div id="viralPanel" class="panel">
+    <div class="card card-accent">
+        <h2>Viral Reels Breakdown</h2>
+        <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Real reels that went viral. Study what hook they used, why it worked, and how to apply it to your content.</p>
+    </div>
+    {% for r in viral_reels %}
+    <div class="reel-card">
+        <div class="reel-header">
+            <div>
+                <div class="reel-creator">{{r.creator}}</div>
+                <div class="meta" style="margin-top:4px">
+                    <span class="tag tag-purple">{{r.category}}</span>
+                    <span class="tag tag-blue">{{r.niche}}</span>
+                </div>
             </div>
+            <div class="reel-views">{{r.views}}</div>
+        </div>
+        <div class="reel-hook">"{{r.hook_used}}"</div>
+        <div class="reel-why">{{r.why_viral}}</div>
+        <div class="reel-takeaway"><b>Your takeaway:</b> {{r.takeaway}}</div>
+    </div>
+    {% endfor %}
+    <div class="card" style="border-color:var(--blue)">
+        <p style="font-size:0.8rem;color:var(--text-dim)"><b>Sources:</b> Wikipedia (Most-viewed Instagram Reels), Loopex Digital, SocialPilot, Later.com, ContentStudio — all 2025/2026 data.</p>
+    </div>
+</div>
+
+<!-- ═══ TRENDING TOPICS ═══ -->
+<div id="trendingPanel" class="panel">
+    <div class="card">
+        <h2>Real-Time Trending Topics</h2>
+        <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:14px">Live data from Reddit & Google Trends. Generate hooks around what's trending right now.</p>
+        <div class="form-group">
+            <label>Your niche (optional)</label>
+            <select id="trendNiche"><option value="">General</option>{% for n in niches %}<option value="{{n}}">{{n|title}}</option>{% endfor %}</select>
+        </div>
+        <button class="btn btn-primary" id="trendBtn" onclick="fetchTrending()">Fetch Live Trends</button>
+    </div>
+    <div id="trendResults" style="display:none">
+        <div class="card"><h2>Trending Now</h2><div id="trendTopics"></div><div id="fetchTime" style="font-size:0.75rem;color:var(--text-muted);margin-top:10px;text-align:right"></div></div>
+        <div class="card"><h2>Keywords</h2><div id="kwCloud" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>
+        <div class="card"><h2>Trending Hooks <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem">click to copy</span></h2><div id="trendHooks"></div></div>
+    </div>
+</div>
+
+<!-- ═══ A/B TEST ═══ -->
+<div id="abtestPanel" class="panel">
+    <div class="card">
+        <h2>A/B Test Your Hooks</h2>
+        <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:14px">Compare two hooks head-to-head. Find the winner before you post.</p>
+        <div class="form-group"><label>Hook A</label><textarea id="hookA" style="min-height:60px" placeholder="First hook..."></textarea></div>
+        <div class="form-group"><label>Hook B</label><textarea id="hookB" style="min-height:60px" placeholder="Second hook..."></textarea></div>
+        <button class="btn btn-primary" id="abBtn" onclick="runABTest()">Compare</button>
+    </div>
+    <div id="abResults" style="display:none">
+        <div class="verdict-box" id="verdictBox"><h3 id="verdictTitle"></h3><p id="verdictDetail" style="color:var(--text-dim);font-size:0.9rem"></p></div>
+        <div class="ab-grid">
+            <div class="ab-card" id="abCardA"><div class="ab-lbl a">Hook A</div><div id="abTextA" style="font-size:0.9rem;margin-bottom:12px"></div><div id="abScoreA" style="font-size:2rem;font-weight:900;text-align:center"></div><div id="abRatingA" style="text-align:center;font-size:0.75rem;font-weight:700;letter-spacing:1px"></div><div class="emotions" id="abEmA" style="margin-top:8px;justify-content:center"></div></div>
+            <div class="ab-card" id="abCardB"><div class="ab-lbl b">Hook B</div><div id="abTextB" style="font-size:0.9rem;margin-bottom:12px"></div><div id="abScoreB" style="font-size:2rem;font-weight:900;text-align:center"></div><div id="abRatingB" style="text-align:center;font-size:0.75rem;font-weight:700;letter-spacing:1px"></div><div class="emotions" id="abEmB" style="margin-top:8px;justify-content:center"></div></div>
+        </div>
+        <div class="card" style="margin-top:16px"><h2>Category Breakdown</h2><div style="display:flex;justify-content:space-between;margin-bottom:10px"><span style="font-size:0.75rem;color:var(--pink);font-weight:700">HOOK A</span><span style="font-size:0.75rem;color:var(--blue);font-weight:700">HOOK B</span></div><div id="abComp"></div></div>
+        <div class="card"><h2>Recommendations</h2><div id="abTips"></div></div>
+    </div>
+</div>
+
+<!-- ═══ ALGORITHM ═══ -->
+<div id="algorithmPanel" class="panel">
+    <div class="card card-accent">
+        <h2>Instagram Algorithm 2026 — Key Stats</h2>
+        <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Data-backed insights on how the Instagram algorithm ranks Reels in 2026.</p>
+        <div class="stat-grid">
+            {% for s in algorithm.key_stats %}
+            <div class="stat-box"><div class="big">{{s.stat}}</div><div class="label">{{s.label}}</div></div>
+            {% endfor %}
         </div>
     </div>
 
+    <div class="card">
+        <h2>Ranking Factors (by importance)</h2>
+        {% for f in algorithm.ranking_factors %}
+        <div class="factor-row">
+            <span class="factor-name">{{f.factor}}</span>
+            <span class="factor-weight tag {% if f.weight=='Highest' %}tag-pink{% elif f.weight=='Very High' %}tag-orange{% elif f.weight=='High' %}tag-green{% else %}tag-blue{% endif %}">{{f.weight}}</span>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-dim);padding:0 12px 10px;line-height:1.4">{{f.detail}}</p>
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h2>Best Posting Times</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+            {% for d in algorithm.best_posting_times.best_days %}<span class="tag tag-green">{{d}}</span>{% endfor %}
+            {% for h in algorithm.best_posting_times.peak_hours %}<span class="tag tag-blue">{{h}}</span>{% endfor %}
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-dim)">Worst: {{algorithm.best_posting_times.worst_time}}</p>
+        <p style="font-size:0.78rem;color:var(--text-muted);margin-top:8px">Source: {{algorithm.best_posting_times.source}}</p>
+    </div>
+
+    <div class="card">
+        <h2>Optimal Format</h2>
+        <div style="font-size:0.9rem;line-height:2">
+            {% for k,v in algorithm.optimal_format.items() %}
+            <div><span class="tag tag-purple" style="margin-right:6px">{{k|replace('_',' ')|title}}</span> {{v}}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Viral Benchmarks</h2>
+        {% for k,v in algorithm.viral_benchmarks.items() %}
+        <div style="padding:8px 0;border-bottom:1px solid var(--border);font-size:0.9rem">
+            <span style="color:var(--text-dim)">{{k|replace('_',' ')|title}}:</span> <b>{{v}}</b>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
-<div class="copied-toast" id="toast">Copied to clipboard!</div>
+<!-- ═══ LIBRARY ═══ -->
+<div id="browsePanel" class="panel">
+    <div class="card card-accent" style="margin-bottom:20px">
+        <h2>Research-Backed Hook Library</h2>
+        <p style="color:var(--text-dim);font-size:0.85rem">Every formula backed by real performance data. Click any hook to copy.</p>
+    </div>
+    {% for key, data in hook_types.items() %}
+    <div class="card lib-section">
+        <h3>{{data.label}}</h3>
+        <p style="color:var(--text-dim);font-size:0.8rem;margin-bottom:4px">{{data.description}}</p>
+        {% if data.research_note %}<p style="color:var(--text-muted);font-size:0.75rem;font-style:italic;border-left:2px solid var(--purple);padding-left:8px;margin:8px 0">{{data.research_note}}</p>{% endif %}
+        {% if data.real_examples %}
+        <label style="color:var(--green);font-size:0.8rem;font-weight:700;margin:10px 0 6px">Real Viral Examples</label>
+        {% for ex in data.real_examples %}
+        <div class="example-card" onclick="copyHook('{{ex.hook|replace("'","\\'")|replace('"','&quot;')}}')">
+            <div class="hook">"{{ex.hook}}"</div>
+            <div class="perf">{{ex.performance}}</div>
+            <div class="src">{{ex.source}}</div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <label style="font-size:0.8rem;margin-top:10px">Templates</label>
+        <div class="template-wrap">
+            {% for t in data.templates %}<span class="template-chip" onclick="copyHook('{{t|replace("'","\\'")|replace('"','&quot;')}}')">"{{t}}"</span>{% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+</div><!-- /container -->
+
+<!-- PAYWALL OVERLAY -->
+<div class="paywall-overlay" id="paywall">
+    <div class="paywall-card">
+        <button class="paywall-close" onclick="closePaywall()">&times;</button>
+        <h2>Upgrade to HookViral Pro</h2>
+        <p style="color:var(--text-dim);font-size:0.9rem">Unlimited analyses, A/B tests, and algorithm insights</p>
+        <div class="price">$9/mo</div>
+        <div class="price-sub">Cancel anytime. 7-day money-back guarantee.</div>
+        <div class="paywall-features">
+            <div class="feat"><span class="check">&#10003;</span> Unlimited hook analyses</div>
+            <div class="feat"><span class="check">&#10003;</span> Unlimited hook generation</div>
+            <div class="feat"><span class="check">&#10003;</span> A/B testing</div>
+            <div class="feat"><span class="check">&#10003;</span> Real-time trending topics</div>
+            <div class="feat"><span class="check">&#10003;</span> Algorithm insights & strategy</div>
+            <div class="feat"><span class="check">&#10003;</span> Weekly trending songs updates</div>
+            <div class="feat"><span class="check">&#10003;</span> Viral Reels breakdowns</div>
+        </div>
+        <button class="btn btn-primary" onclick="upgradePro()">Get Pro Access</button>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:10px">Secure payment via Stripe</p>
+    </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast toast-green" id="toast">Copied!</div>
+<div class="toast toast-yellow" id="limitToast">Free limit reached. Upgrade for unlimited access.</div>
 
 <script>
+// ─── PAYWALL / USAGE TRACKING ────────────────────────────────────────────────
+const FREE_LIMITS = { analyze: 3, generate: 3, abtest: 1, trending: 1 };
+const PRO_FEATURES = ['abtest', 'algorithm'];
+
+function getUsage() {
+    const today = new Date().toISOString().slice(0,10);
+    let usage = JSON.parse(localStorage.getItem('hv_usage') || '{}');
+    if (usage.date !== today) usage = { date: today, analyze: 0, generate: 0, abtest: 0, trending: 0 };
+    return usage;
+}
+function saveUsage(u) { localStorage.setItem('hv_usage', JSON.stringify(u)); }
+function isPro() { return localStorage.getItem('hv_pro') === 'true'; }
+
+function checkLimit(action) {
+    if (isPro()) return true;
+    const u = getUsage();
+    if ((u[action] || 0) >= (FREE_LIMITS[action] || 99)) {
+        showPaywall();
+        return false;
+    }
+    u[action] = (u[action] || 0) + 1;
+    saveUsage(u);
+    return true;
+}
+
+function showPaywall() { document.getElementById('paywall').classList.add('show'); }
+function closePaywall() { document.getElementById('paywall').classList.remove('show'); }
+function upgradePro() {
+    // In production, this would redirect to Stripe Checkout
+    // For demo: simulate upgrade
+    localStorage.setItem('hv_pro', 'true');
+    closePaywall();
+    showToast('toast', 'Pro activated!');
+    location.reload();
+}
+
+// ─── TAB SWITCHING ───────────────────────────────────────────────────────────
 function switchTab(tab) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    // Check if pro-only feature
+    if (PRO_FEATURES.includes(tab) && !isPro()) {
+        const u = getUsage();
+        if ((u[tab] || 0) >= (FREE_LIMITS[tab] || 1)) { showPaywall(); return; }
+    }
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    event.target.classList.add('active');
+    event.target.closest('.nav-btn').classList.add('active');
     document.getElementById(tab + 'Panel').classList.add('active');
 }
 
+// ─── ANALYZE ─────────────────────────────────────────────────────────────────
 async function analyzeHook() {
     const hook = document.getElementById('hookInput').value.trim();
     if (!hook) return;
+    if (!checkLimit('analyze')) return;
     const btn = document.getElementById('analyzeBtn');
     btn.disabled = true; btn.textContent = 'Analyzing...';
     try {
-        const resp = await fetch('/api/analyze', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ hook }),
-        });
-        const data = await resp.json();
+        const r = await fetch('/api/analyze', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({hook}) });
+        const d = await r.json();
         document.getElementById('results').style.display = 'block';
         const circle = document.getElementById('scoreCircle');
-        circle.className = 'score-circle ' + data.rating_color;
-        document.getElementById('scoreNumber').textContent = data.score;
-        document.getElementById('scoreLabel').textContent = data.rating;
-        const emotionTags = document.getElementById('emotionTags');
-        emotionTags.innerHTML = '';
-        for (const [emotion] of Object.entries(data.emotions_triggered)) {
-            emotionTags.innerHTML += `<span class="emotion-tag">${emotion.replace('_', ' ')}</span>`;
-        }
-        const breakdown = document.getElementById('breakdown');
-        breakdown.innerHTML = '';
-        const labels = { power_words:'Power Words', emotion:'Emotion', pattern:'Pattern', structure:'Structure', length:'Length', specificity:'Specificity' };
-        for (const [key, val] of Object.entries(data.breakdown)) {
-            breakdown.innerHTML += `
-                <div class="breakdown-item">
-                    <div class="breakdown-label">${labels[key]||key}</div>
-                    <div class="breakdown-bar"><div class="breakdown-fill" style="width:${val}%"></div></div>
-                    <div class="breakdown-value">${val}</div>
-                </div>`;
-        }
-        const tips = document.getElementById('tips');
-        tips.innerHTML = '';
-        for (const tip of data.tips) {
-            tips.innerHTML += `<div class="tip"><span class="tip-icon">&#x2192;</span>${tip}</div>`;
-        }
-    } catch (err) { console.error(err); }
-    btn.disabled = false; btn.textContent = 'Analyze Viral Potential';
+        circle.className = 'score-ring ' + d.rating_color;
+        circle.style.setProperty('--pct', d.score);
+        document.getElementById('scoreNum').textContent = d.score;
+        document.getElementById('scoreLbl').textContent = d.rating;
+        const em = document.getElementById('emotionTags'); em.innerHTML = '';
+        for (const [e] of Object.entries(d.emotions_triggered)) em.innerHTML += `<span class="emotion-tag">${e.replace('_',' ')}</span>`;
+        const bd = document.getElementById('breakdown'); bd.innerHTML = '';
+        const lbls = {power_words:'Power Words',emotion:'Emotion',pattern:'Pattern',structure:'Structure',length:'Length',specificity:'Specificity'};
+        for (const [k,v] of Object.entries(d.breakdown)) bd.innerHTML += `<div class="bd-item"><div class="bd-label">${lbls[k]||k}</div><div class="bd-bar"><div class="bd-fill" style="width:${v}%"></div></div><div class="bd-val">${v}</div></div>`;
+        const tips = document.getElementById('tips'); tips.innerHTML = '';
+        for (const t of d.tips) tips.innerHTML += `<div class="tip">&#x2192; ${t}</div>`;
+    } catch(e) { console.error(e); }
+    btn.disabled = false; btn.textContent = 'Analyze Hook';
 }
 
+// ─── GENERATE ────────────────────────────────────────────────────────────────
 async function generateHooks() {
+    if (!checkLimit('generate')) return;
     const niche = document.getElementById('nicheSelect').value;
-    const hookType = document.getElementById('typeSelect').value;
-    const btn = document.getElementById('generateBtn');
+    const type = document.getElementById('typeSelect').value;
+    const btn = document.getElementById('genBtn');
     btn.disabled = true; btn.textContent = 'Generating...';
     try {
-        const resp = await fetch('/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ niche, hook_type: hookType || null, count: 10 }),
-        });
-        const data = await resp.json();
+        const r = await fetch('/api/generate', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({niche, hook_type:type||null, count:10}) });
+        const d = await r.json();
         document.getElementById('genResults').style.display = 'block';
-        const list = document.getElementById('hooksList');
-        list.innerHTML = '';
-        for (const h of data.hooks) {
-            const safe = h.hook.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-            list.innerHTML += `
-                <div class="hook-result" onclick="copyHook('${safe}')">
-                    <div class="hook-text">${h.hook}</div>
-                    <div class="hook-meta">
-                        <span class="hook-tag">${h.type}</span>
-                        <span class="hook-score-small">${h.viral_potential}% viral potential</span>
-                    </div>
-                </div>`;
+        const list = document.getElementById('hooksList'); list.innerHTML = '';
+        for (const h of d.hooks) {
+            const safe = h.hook.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+            list.innerHTML += `<div class="hook-card" onclick="copyHook('${safe}')"><div class="text">${h.hook}</div><div class="meta"><span class="tag tag-pink">${h.type}</span><span class="tag tag-green">${h.viral_potential}%</span></div></div>`;
         }
-    } catch (err) { console.error(err); }
+    } catch(e) { console.error(e); }
     btn.disabled = false; btn.textContent = 'Generate 10 Hooks';
 }
 
+// ─── TRENDING ────────────────────────────────────────────────────────────────
 async function fetchTrending() {
-    const niche = document.getElementById('trendNicheSelect').value;
+    if (!checkLimit('trending')) return;
+    const niche = document.getElementById('trendNiche').value;
     const btn = document.getElementById('trendBtn');
-    btn.disabled = true; btn.textContent = 'Fetching live trends...';
+    btn.disabled = true; btn.textContent = 'Fetching...';
     try {
-        const resp = await fetch('/api/trending', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ niche: niche || null, count: 10 }),
-        });
-        const data = await resp.json();
+        const r = await fetch('/api/trending', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({niche:niche||null,count:10}) });
+        const d = await r.json();
         document.getElementById('trendResults').style.display = 'block';
-
-        // Trending topics
-        const topicsEl = document.getElementById('trendingTopics');
-        topicsEl.innerHTML = '';
-        for (const t of data.trending_topics) {
-            topicsEl.innerHTML += `
-                <div class="trend-item">
-                    <span class="trend-title">${t.title}</span>
-                    <span class="trend-source">${t.source}</span>
-                </div>`;
+        const topics = document.getElementById('trendTopics'); topics.innerHTML = '';
+        for (const t of d.trending_topics) topics.innerHTML += `<div style="display:flex;justify-content:space-between;padding:8px 12px;background:var(--surface2);border-radius:8px;margin-bottom:4px;font-size:0.85rem"><span>${t.title}</span><span style="color:var(--text-muted);font-size:0.75rem">${t.source}</span></div>`;
+        document.getElementById('fetchTime').textContent = `${d.fetched_at} | Reddit: ${d.sources_count.reddit}, Google: ${d.sources_count.google_trends}`;
+        const kw = document.getElementById('kwCloud'); kw.innerHTML = '';
+        for (const k of d.trending_keywords) kw.innerHTML += `<span class="tag tag-orange" style="padding:5px 12px;border-radius:20px">${k}</span>`;
+        const hooks = document.getElementById('trendHooks'); hooks.innerHTML = '';
+        for (const h of d.hooks) {
+            const safe = h.hook.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+            hooks.innerHTML += `<div class="hook-card" onclick="copyHook('${safe}')"><div class="text">${h.hook}</div><div class="meta"><span class="tag tag-pink">${h.type}</span><span class="tag tag-blue">${h.based_on}</span></div></div>`;
         }
-
-        // Fetch time
-        document.getElementById('fetchTime').textContent = `Fetched: ${data.fetched_at} | Sources: Reddit (${data.sources_count.reddit}), Google Trends (${data.sources_count.google_trends})`;
-
-        // Keywords
-        const cloudEl = document.getElementById('keywordCloud');
-        cloudEl.innerHTML = '';
-        for (const kw of data.trending_keywords) {
-            cloudEl.innerHTML += `<span class="keyword-tag">${kw}</span>`;
-        }
-
-        // Hooks
-        const hooksEl = document.getElementById('trendHooksList');
-        hooksEl.innerHTML = '';
-        for (const h of data.hooks) {
-            const safe = h.hook.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-            hooksEl.innerHTML += `
-                <div class="hook-result" onclick="copyHook('${safe}')">
-                    <div class="hook-text">${h.hook}</div>
-                    <div class="hook-meta">
-                        <span class="hook-tag">${h.type}</span>
-                        <span class="hook-source-tag">Based on: ${h.based_on}</span>
-                    </div>
-                </div>`;
-        }
-    } catch (err) { console.error(err); }
-    btn.disabled = false; btn.textContent = 'Fetch Trending Hooks';
+    } catch(e) { console.error(e); }
+    btn.disabled = false; btn.textContent = 'Fetch Live Trends';
 }
 
+// ─── A/B TEST ────────────────────────────────────────────────────────────────
 async function runABTest() {
-    const hookA = document.getElementById('hookA').value.trim();
-    const hookB = document.getElementById('hookB').value.trim();
-    if (!hookA || !hookB) return;
+    const a = document.getElementById('hookA').value.trim();
+    const b = document.getElementById('hookB').value.trim();
+    if (!a || !b) return;
+    if (!checkLimit('abtest')) return;
     const btn = document.getElementById('abBtn');
     btn.disabled = true; btn.textContent = 'Comparing...';
     try {
-        const resp = await fetch('/api/ab-test', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ hook_a: hookA, hook_b: hookB }),
-        });
-        const data = await resp.json();
+        const r = await fetch('/api/ab-test', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({hook_a:a,hook_b:b}) });
+        const d = await r.json();
         document.getElementById('abResults').style.display = 'block';
-
-        // Verdict
-        const verdictCard = document.getElementById('verdictCard');
-        if (data.verdict === 'TIE') {
-            document.getElementById('verdictTitle').textContent = "It's a Tie!";
-            verdictCard.style.borderColor = 'var(--yellow)';
-        } else {
-            document.getElementById('verdictTitle').textContent = `Hook ${data.verdict} Wins!`;
-            verdictCard.style.borderColor = 'var(--green)';
+        const vb = document.getElementById('verdictBox');
+        document.getElementById('verdictTitle').textContent = d.verdict==='TIE' ? "It's a Tie!" : `Hook ${d.verdict} Wins!`;
+        vb.style.borderColor = d.verdict==='TIE' ? 'var(--yellow)' : 'var(--green)';
+        document.getElementById('verdictDetail').textContent = d.verdict_detail;
+        document.getElementById('abCardA').className = 'ab-card '+(d.verdict==='A'?'winner':d.verdict==='B'?'loser':'');
+        document.getElementById('abTextA').textContent = d.hook_a.text;
+        document.getElementById('abScoreA').textContent = d.hook_a.score;
+        document.getElementById('abScoreA').style.color = `var(--${d.hook_a.rating_color})`;
+        document.getElementById('abRatingA').textContent = d.hook_a.rating;
+        document.getElementById('abRatingA').style.color = `var(--${d.hook_a.rating_color})`;
+        const ea = document.getElementById('abEmA'); ea.innerHTML = '';
+        for (const e of d.hook_a.emotions) ea.innerHTML += `<span class="emotion-tag">${e.replace('_',' ')}</span>`;
+        document.getElementById('abCardB').className = 'ab-card '+(d.verdict==='B'?'winner':d.verdict==='A'?'loser':'');
+        document.getElementById('abTextB').textContent = d.hook_b.text;
+        document.getElementById('abScoreB').textContent = d.hook_b.score;
+        document.getElementById('abScoreB').style.color = `var(--${d.hook_b.rating_color})`;
+        document.getElementById('abRatingB').textContent = d.hook_b.rating;
+        document.getElementById('abRatingB').style.color = `var(--${d.hook_b.rating_color})`;
+        const eb = document.getElementById('abEmB'); eb.innerHTML = '';
+        for (const e of d.hook_b.emotions) eb.innerHTML += `<span class="emotion-tag">${e.replace('_',' ')}</span>`;
+        const comp = document.getElementById('abComp'); comp.innerHTML = '';
+        for (const c of d.comparison) {
+            comp.innerHTML += `<div class="comp-row"><div style="color:var(--text-dim);font-weight:500">${c.category}</div><div class="comp-bar"><div class="comp-fill-a" style="width:${c.score_a}%"></div></div><div class="comp-val ${c.winner==='A'?'win':''}">${c.score_a}</div><div class="comp-bar"><div class="comp-fill-b" style="width:${c.score_b}%"></div></div><div class="comp-val ${c.winner==='B'?'win':''}">${c.score_b}</div></div>`;
         }
-        document.getElementById('verdictDetail').textContent = data.verdict_detail;
-
-        // Hook A card
-        const cardA = document.getElementById('abCardA');
-        cardA.className = 'ab-card ' + (data.verdict === 'A' ? 'winner' : data.verdict === 'B' ? 'loser' : '');
-        document.getElementById('abTextA').textContent = data.hook_a.text;
-        document.getElementById('abScoreA').textContent = data.hook_a.score;
-        document.getElementById('abScoreA').style.color = `var(--${data.hook_a.rating_color})`;
-        document.getElementById('abRatingA').textContent = data.hook_a.rating;
-        document.getElementById('abRatingA').style.color = `var(--${data.hook_a.rating_color})`;
-        const emA = document.getElementById('abEmotionsA');
-        emA.innerHTML = '';
-        for (const e of data.hook_a.emotions) {
-            emA.innerHTML += `<span class="emotion-tag">${e.replace('_',' ')}</span>`;
-        }
-
-        // Hook B card
-        const cardB = document.getElementById('abCardB');
-        cardB.className = 'ab-card ' + (data.verdict === 'B' ? 'winner' : data.verdict === 'A' ? 'loser' : '');
-        document.getElementById('abTextB').textContent = data.hook_b.text;
-        document.getElementById('abScoreB').textContent = data.hook_b.score;
-        document.getElementById('abScoreB').style.color = `var(--${data.hook_b.rating_color})`;
-        document.getElementById('abRatingB').textContent = data.hook_b.rating;
-        document.getElementById('abRatingB').style.color = `var(--${data.hook_b.rating_color})`;
-        const emB = document.getElementById('abEmotionsB');
-        emB.innerHTML = '';
-        for (const e of data.hook_b.emotions) {
-            emB.innerHTML += `<span class="emotion-tag">${e.replace('_',' ')}</span>`;
-        }
-
-        // Category comparison
-        const compEl = document.getElementById('abComparison');
-        compEl.innerHTML = '';
-        for (const c of data.comparison) {
-            const aWin = c.winner === 'A' ? 'winning' : '';
-            const bWin = c.winner === 'B' ? 'winning' : '';
-            compEl.innerHTML += `
-                <div class="comparison-row">
-                    <div class="comp-cat">${c.category}</div>
-                    <div class="comp-bar"><div class="comp-fill-a" style="width:${c.score_a}%"></div></div>
-                    <div class="comp-val ${aWin}">${c.score_a}</div>
-                    <div class="comp-bar"><div class="comp-fill-b" style="width:${c.score_b}%"></div></div>
-                    <div class="comp-val ${bWin}">${c.score_b}</div>
-                </div>`;
-        }
-
-        // Recommendations
-        const tipsEl = document.getElementById('abTips');
-        tipsEl.innerHTML = '';
-        for (const tip of data.recommendations) {
-            tipsEl.innerHTML += `<div class="tip"><span class="tip-icon">&#x2192;</span>${tip}</div>`;
-        }
-
-    } catch (err) { console.error(err); }
-    btn.disabled = false; btn.textContent = 'Compare Hooks';
+        const tips = document.getElementById('abTips'); tips.innerHTML = '';
+        for (const t of d.recommendations) tips.innerHTML += `<div class="tip">&#x2192; ${t}</div>`;
+    } catch(e) { console.error(e); }
+    btn.disabled = false; btn.textContent = 'Compare';
 }
 
+// ─── UTILS ───────────────────────────────────────────────────────────────────
 function copyHook(text) {
     navigator.clipboard.writeText(text);
-    const toast = document.getElementById('toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 1500);
+    showToast('toast');
 }
 
-document.getElementById('hookInput').addEventListener('keydown', (e) => {
+function showToast(id, msg) {
+    const t = document.getElementById(id);
+    if (msg) t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1500);
+}
+
+document.getElementById('hookInput').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); analyzeHook(); }
 });
 </script>

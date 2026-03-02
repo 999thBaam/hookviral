@@ -1,13 +1,51 @@
 """
 Database of proven viral hook formulas, categorized by type.
-Based on analysis of top-performing Instagram content.
+Based on research from top-performing Instagram content creators
+and social media marketing data from 2024-2026.
+
+Sources:
+- Opus.pro: Instagram Reels Hook Formulas (3-second hold rate research)
+- Torro.io: 100+ Best Hooks for Instagram Reels 2026
+- TheDesignsFirm: 51 Viral Reel Hooks with 2026 Examples
+- Vexub: 20 Viral Video Hooks That Stop the Scroll
+- ContentStudio: 30+ Proven Examples from Top Creators
+- Insense.pro: Must-Try Instagram Reel Hooks for 2026
+
+Key stats:
+- Average attention span: 8.25 seconds (first 3 seconds are critical)
+- 3-second hold rate benchmark: 60%+ for strong hooks, 70-80% for top performers
+- Reels with strong hooks outperform weak ones by 5-10x in reach
+- Optimal hook length: 8-15 words for reels
 """
 
 HOOK_FORMULAS = {
     "curiosity_gap": {
         "label": "Curiosity Gap",
-        "description": "Creates an information gap that makes viewers desperate to know the answer.",
+        "description": "Creates an information gap that makes viewers desperate to know the answer. Exploits the brain's need to close open loops — viewers can't scroll away without resolution.",
         "score_weight": 0.95,
+        "research_note": "Humans are wired to close open loops. When you present incomplete information, the brain experiences mild discomfort it needs to resolve. This is the foundation of the most effective hooks. (Source: Opus.pro)",
+        "real_examples": [
+            {
+                "hook": "This feels illegal to know",
+                "performance": "One of the most shared hook formats in 2025. Consistently drives 70%+ 3-second hold rates across niches.",
+                "source": "Torro.io / Multiple top creators",
+            },
+            {
+                "hook": "I wasn't going to share this but...",
+                "performance": "Confession-style curiosity hooks generate 2-3x more saves than direct hooks.",
+                "source": "ContentStudio — Top creator analysis",
+            },
+            {
+                "hook": "Nobody is talking about this TikTok strategy...",
+                "performance": "Gap-based openers consistently rank in top 10% for watch time retention.",
+                "source": "Opus.pro — Hook formula research",
+            },
+            {
+                "hook": "I almost quit my job until I discovered this one thing...",
+                "performance": "Unfinished story hooks drive the highest average watch time among all hook types.",
+                "source": "Vexub — Viral Video Hooks 2026",
+            },
+        ],
         "templates": [
             "Nobody talks about {topic} but it changed my {outcome}",
             "I found out why {common_thing} is actually {unexpected_truth}",
@@ -16,7 +54,7 @@ HOOK_FORMULAS = {
             "I tested {thing} so you don't have to. Here's what happened",
             "The {topic} trick that {authority} don't want you to know",
             "Stop {common_action} — do this instead",
-            "This {topic} hack is almost illegal",
+            "This {topic} hack feels illegal to know",
             "I've been doing {thing} wrong my entire life",
             "Why {percentage}% of people fail at {topic}",
             "The dark side of {popular_thing} nobody mentions",
@@ -25,8 +63,31 @@ HOOK_FORMULAS = {
     },
     "contrarian": {
         "label": "Contrarian / Hot Take",
-        "description": "Goes against common belief. Triggers engagement through disagreement.",
+        "description": "Goes against common belief. Challenges the viewer's existing knowledge and forces them to stay to find out why. Triggers engagement through disagreement, comments, and shares.",
         "score_weight": 0.90,
+        "research_note": "Starting a Reel with a statement that challenges common beliefs immediately stops the scroll. Brands love this format because it sparks conversation and saves, both of which boost reach. (Source: Torro.io)",
+        "real_examples": [
+            {
+                "hook": "Everyone tells you to post daily on Instagram, but I grew to 100K posting twice a week",
+                "performance": "Contrarian hooks with specific numbers achieve 80%+ 3-second hold rates. The specificity makes the contrarian claim believable.",
+                "source": "Opus.pro — Hook Formula Research",
+            },
+            {
+                "hook": "You're wasting your money on Facebook ads",
+                "performance": "Bold contrarian statements in the marketing niche consistently drive 3-5x more comments than neutral hooks.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+            {
+                "hook": "Unpopular Opinion: High follower counts are vanity metrics",
+                "performance": "Unpopular opinion format is one of the most-used viral structures in 2025-2026.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+            {
+                "hook": "Everything you know about keyword research is wrong",
+                "performance": "The 'everything you know is wrong' format consistently ranks in top 5 hook styles for saves and shares.",
+                "source": "Vexub — Viral Video Hooks 2026",
+            },
+        ],
         "templates": [
             "{Popular_advice} is the worst advice I've ever heard",
             "Unpopular opinion: {topic} is completely overrated",
@@ -42,8 +103,31 @@ HOOK_FORMULAS = {
     },
     "story": {
         "label": "Story Hook",
-        "description": "Opens with a compelling personal narrative. Highest watch time.",
+        "description": "Opens with a compelling personal narrative. Story hooks achieve the highest average watch time because humans are hardwired for narrative. The vulnerability + outcome format builds trust and curiosity simultaneously.",
         "score_weight": 0.92,
+        "research_note": "Story-based hooks have the highest completion rates. The brain processes stories differently — it activates empathy, making viewers feel personally invested in the outcome. (Source: Vexub, ContentStudio)",
+        "real_examples": [
+            {
+                "hook": "I wasted $5,000 on Instagram ads before learning this one targeting trick",
+                "performance": "Mistake hooks combining vulnerability with specific dollar amounts get 2-4x more engagement than generic story hooks.",
+                "source": "Opus.pro — Mistake Hook Formula",
+            },
+            {
+                "hook": "How I hit 10K followers in 60 days without paid ads",
+                "performance": "Time-based story hooks drive urgency. The specific timeframe increases credibility and 3-second hold rates by 40%.",
+                "source": "Opus.pro — Time-Based Hook Formula",
+            },
+            {
+                "hook": "Here's how I completely failed at influencer marketing",
+                "performance": "Failure stories outperform success stories for engagement. Vulnerability drives 3x more comments.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+            {
+                "hook": "The story of how one simple landing page change increased conversions by 50%",
+                "performance": "Specific result stories drive high save rates — viewers bookmark for later reference.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+        ],
         "templates": [
             "3 years ago I was {bad_situation}. Today I {good_outcome}",
             "I went from {start} to {end} in {timeframe}. Here's how",
@@ -59,8 +143,31 @@ HOOK_FORMULAS = {
     },
     "listicle": {
         "label": "Listicle / Number",
-        "description": "Numbered lists signal clear value. High save rates.",
+        "description": "Numbered lists signal clear, digestible value. They set expectations upfront (viewer knows exactly what they'll get) and drive the highest save rates because viewers bookmark them for later.",
         "score_weight": 0.85,
+        "research_note": "Numbered list hooks with specific outcomes doubled engagement compared to vague lists. '5 Reels mistakes killing your reach' outperforms '5 Reels tips' because it implies loss aversion. (Source: Opus.pro)",
+        "real_examples": [
+            {
+                "hook": "5 Reels mistakes killing your reach",
+                "performance": "Negative-framed listicles (mistakes, things to avoid) get 40% more clicks than positive-framed ones (tips, tricks).",
+                "source": "Opus.pro — Numbered List Hook Formula",
+            },
+            {
+                "hook": "3 caption formulas that doubled my engagement",
+                "performance": "Listicles with specific outcome metrics (doubled, tripled, 10x) drive higher 3-second hold rates.",
+                "source": "Opus.pro — Numbered List Hook Formula",
+            },
+            {
+                "hook": "7 things I know at 33 that I wish I knew at 23",
+                "performance": "Generated significantly more engagement than standard listicle formats. The age-wisdom format is highly shareable.",
+                "source": "ContentStudio — @growwithcolby",
+            },
+            {
+                "hook": "My top 5 free keyword research tools",
+                "performance": "Tool recommendation listicles drive the highest save rates across all listicle subtypes.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+        ],
         "templates": [
             "{Number} {topic} mistakes that are costing you {outcome}",
             "{Number} things I wish I knew before {action}",
@@ -76,8 +183,31 @@ HOOK_FORMULAS = {
     },
     "authority": {
         "label": "Authority / Proof",
-        "description": "Establishes credibility immediately. Builds trust fast.",
+        "description": "Establishes credibility in the first 3 seconds. By leading with credentials, specific numbers, or proven results, viewers immediately trust the content is worth watching.",
         "score_weight": 0.88,
+        "research_note": "Authority hooks work because they answer the viewer's subconscious question: 'Why should I listen to you?' Leading with credentials or proof eliminates this friction immediately. (Source: Vexub, TheDesignsFirm)",
+        "real_examples": [
+            {
+                "hook": "As a dermatologist with 15 years of experience, here's what I actually recommend",
+                "performance": "Credential-led hooks in health/finance niches achieve 75%+ 3-second hold rates. Professional authority stops the scroll instantly.",
+                "source": "Vexub — Authority Hook Analysis",
+            },
+            {
+                "hook": "This strategy helped 500 of my clients double their revenue",
+                "performance": "Social proof openers with specific client numbers drive high trust and engagement.",
+                "source": "Vexub — Social Proof Opener",
+            },
+            {
+                "hook": "After running a SEO company for 10 years, the biggest lesson I learned",
+                "performance": "Long-tenure authority claims drive curiosity — viewers want to know what the lesson is.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+            {
+                "hook": "The exact framework I use to write blog posts that rank on Google's first page",
+                "performance": "Framework reveals from authorities drive the highest save rates in B2B/marketing niches.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+        ],
         "templates": [
             "As a {profession} with {years} years of experience, here's the truth about {topic}",
             "I've {achievement} and this is what I learned",
@@ -93,8 +223,31 @@ HOOK_FORMULAS = {
     },
     "fear_urgency": {
         "label": "Fear / Urgency",
-        "description": "Triggers loss aversion. Creates FOMO. High click-through.",
+        "description": "Triggers loss aversion — the psychological principle that people fear losing something more than they desire gaining something equivalent. Creates FOMO and drives immediate action.",
         "score_weight": 0.87,
+        "research_note": "Fear-based hooks trigger loss aversion, one of the strongest psychological motivators. Combined with urgency (time pressure), these hooks drive the highest click-through and share rates. (Source: Vexub, Torro.io)",
+        "real_examples": [
+            {
+                "hook": "Everyone is doing this except you",
+                "performance": "FOMO hooks drive 2-3x more shares than value-promise hooks. The exclusion trigger is powerful.",
+                "source": "Vexub — FOMO Hook Analysis",
+            },
+            {
+                "hook": "It's 2026 and you're still not using a CRM system?",
+                "performance": "Year-shaming hooks create urgency by implying the viewer is behind. High comment engagement due to defensiveness.",
+                "source": "TheDesignsFirm — Trend-Based Hooks",
+            },
+            {
+                "hook": "Stop making this mistake with your Instagram — it's killing your reach",
+                "performance": "Warning/mistake hooks in the social media niche drive 50% higher save rates than tip-based hooks.",
+                "source": "Vexub — Mistake Warning Hook",
+            },
+            {
+                "hook": "Red flags to look for in your marketing agency",
+                "performance": "Red flag hooks drive high watch time — viewers are anxious to check if they're affected.",
+                "source": "Torro.io — Warning Hook Category",
+            },
+        ],
         "templates": [
             "If you're not doing {action} in {year}, you're falling behind",
             "This {thing} is about to change everything. Are you ready?",
@@ -110,8 +263,31 @@ HOOK_FORMULAS = {
     },
     "value_promise": {
         "label": "Value Promise",
-        "description": "Promises clear, specific value upfront. High save rate.",
+        "description": "Promises clear, specific value upfront. These hooks work because they immediately answer 'What's in it for me?' — the viewer knows exactly what they'll gain by watching.",
         "score_weight": 0.86,
+        "research_note": "When the opening line promises something valuable, viewers stay through the key moments of your Reel, boosting average watch time — a major ranking factor in Instagram's algorithm. (Source: Insense.pro, Torro.io)",
+        "real_examples": [
+            {
+                "hook": "How to get more website traffic without paid ads",
+                "performance": "How-to hooks with a pain point removal ('without paid ads') outperform simple how-to hooks by 60%.",
+                "source": "TheDesignsFirm — Solution/How-To Hooks",
+            },
+            {
+                "hook": "A little-known AI tool that will change how you write social media copy",
+                "performance": "Tool reveal hooks drive the highest save-to-view ratio — viewers bookmark to try later.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+            {
+                "hook": "Save this for later: the complete guide to email marketing",
+                "performance": "'Save this' as an opening CTA increases actual save rates by 30-40% compared to end-of-video CTAs.",
+                "source": "Torro.io — Benefit-Focused Hooks",
+            },
+            {
+                "hook": "This free tool does what I used to pay $200/month for",
+                "performance": "Money-saving tool reveals are among the most shared hook formats. The specific dollar amount adds credibility.",
+                "source": "Vexub — Tool Reveal Hook",
+            },
+        ],
         "templates": [
             "Save this for later: the complete guide to {topic}",
             "The only {topic} tutorial you'll ever need",
@@ -127,8 +303,31 @@ HOOK_FORMULAS = {
     },
     "question": {
         "label": "Question Hook",
-        "description": "Engages the brain automatically. People can't resist answering.",
+        "description": "Engages the brain automatically — when asked a question, the human brain compulsively tries to answer it. This involuntary mental engagement keeps viewers watching to compare their answer.",
         "score_weight": 0.83,
+        "research_note": "Question hooks pique interest by suggesting there's something the viewer doesn't know yet. Starting a Reel with 'Did you know...?' or 'Does this sound like you?' plants a question in the viewer's mind that they need answered. (Source: Torro.io, Insense.pro)",
+        "real_examples": [
+            {
+                "hook": "Are you using Instagram's algorithm against yourself?",
+                "performance": "Self-referential question hooks drive high engagement because viewers immediately self-assess.",
+                "source": "Opus.pro — Question Hook Formula",
+            },
+            {
+                "hook": "What if everything you know about Reels is wrong?",
+                "performance": "Paradigm-challenging questions drive the highest comment rates among question hooks — viewers debate in comments.",
+                "source": "Opus.pro — Question Hook Formula",
+            },
+            {
+                "hook": "Does this sound like you?",
+                "performance": "Relatability questions like 'Stop scrolling if this sounds like you' consistently rank in top hooks for 3-second hold rate.",
+                "source": "Torro.io — Question-Based Hooks",
+            },
+            {
+                "hook": "Do you know the #1 reason why social media campaigns fail on ROI?",
+                "performance": "Numbered ranking questions (#1 reason, biggest mistake) create a stronger curiosity gap than open questions.",
+                "source": "TheDesignsFirm — 51 Viral Reel Hooks",
+            },
+        ],
         "templates": [
             "What would you do if {scenario}?",
             "Can you actually {outcome} by just {simple_action}?",

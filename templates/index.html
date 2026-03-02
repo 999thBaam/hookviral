@@ -513,17 +513,55 @@
 
     <!-- BROWSE TAB -->
     <div id="browsePanel" class="panel">
+        <div class="card" style="border-color:var(--accent);margin-bottom:24px;">
+            <h2>Research-Backed Hook Library</h2>
+            <p style="color:var(--text-dim);margin-bottom:12px;">Every formula below is backed by real performance data from viral Instagram content.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <span class="keyword-tag" style="background:rgba(225,48,108,0.1);color:var(--accent);border-color:rgba(225,48,108,0.2);">8.25s avg attention span</span>
+                <span class="keyword-tag" style="background:rgba(225,48,108,0.1);color:var(--accent);border-color:rgba(225,48,108,0.2);">70-80% hold rate for top hooks</span>
+                <span class="keyword-tag" style="background:rgba(225,48,108,0.1);color:var(--accent);border-color:rgba(225,48,108,0.2);">5-10x more reach with strong hooks</span>
+            </div>
+        </div>
+
+        {% for key, data in hook_types.items() %}
         <div class="card">
-            <h2>Hook Formula Library</h2>
-            <p style="color:var(--text-dim);margin-bottom:20px;">Proven formulas used in top-performing Instagram content.</p>
-            <div class="type-grid">
-                {% for key, data in hook_types.items() %}
-                <div class="type-card">
-                    <h3>{{ data.label }}</h3>
-                    <p>{{ data.description }}</p>
-                    <div class="example">"{{ data.templates[0] }}"</div>
+            <h2 style="color:var(--accent);font-size:1.3rem;">{{ data.label }}</h2>
+            <p style="color:var(--text-dim);margin-bottom:6px;">{{ data.description }}</p>
+            {% if data.research_note %}
+            <p style="color:var(--text-dim);font-size:0.8rem;font-style:italic;margin-bottom:16px;border-left:2px solid var(--accent2);padding-left:10px;">{{ data.research_note }}</p>
+            {% endif %}
+
+            {% if data.real_examples %}
+            <div style="margin-bottom:16px;">
+                <label style="font-size:0.85rem;font-weight:600;color:var(--green);margin-bottom:10px;">Real Viral Examples</label>
+                {% for ex in data.real_examples %}
+                <div style="padding:12px 16px;background:var(--surface2);border-radius:10px;margin-bottom:8px;border-left:3px solid var(--green);cursor:pointer;" onclick="copyHook('{{ ex.hook | replace("'", "\\'") }}')">
+                    <div style="font-weight:600;font-size:0.95rem;margin-bottom:6px;">"{{ ex.hook }}"</div>
+                    <div style="font-size:0.8rem;color:var(--green);margin-bottom:4px;">{{ ex.performance }}</div>
+                    <div style="font-size:0.75rem;color:var(--text-dim);">Source: {{ ex.source }}</div>
                 </div>
                 {% endfor %}
+            </div>
+            {% endif %}
+
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dim);margin-bottom:8px;">Hook Templates (click to copy)</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                {% for t in data.templates %}
+                <span style="padding:6px 12px;background:var(--surface2);border-radius:8px;font-size:0.8rem;cursor:pointer;border:1px solid var(--border);transition:border-color 0.2s;" onclick="copyHook('{{ t | replace("'", "\\'") }}')" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">"{{ t }}"</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="card" style="border-color:var(--blue);">
+            <h2>Data Sources</h2>
+            <div style="font-size:0.85rem;color:var(--text-dim);line-height:1.8;">
+                <div>Opus.pro — Instagram Reels Hook Formulas (3-second hold rate research)</div>
+                <div>Torro.io — 100+ Best Hooks for Instagram Reels 2026</div>
+                <div>TheDesignsFirm — 51 Viral Reel Hooks with 2026 Examples</div>
+                <div>Vexub — 20 Viral Video Hooks That Stop the Scroll 2026</div>
+                <div>ContentStudio — 30+ Proven Examples from Top Creators</div>
+                <div>Insense.pro — Must-Try Instagram Reel Hooks for 2026</div>
             </div>
         </div>
     </div>

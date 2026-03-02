@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HookViral - Instagram Hook Analyzer & Generator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface2: #1e1e1e;
+            --border: #2a2a2a;
+            --text: #e5e5e5;
+            --text-dim: #888;
+            --accent: #E1306C;
+            --accent2: #833AB4;
+            --accent3: #F77737;
+            --green: #22c55e;
+            --blue: #3b82f6;
+            --yellow: #eab308;
+            --red: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 50%, var(--accent3) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .header p { color: var(--text-dim); margin-top: 8px; font-size: 1.05rem; }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 24px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tab:hover { border-color: var(--accent); color: var(--text); }
+        .tab.active {
+            background: linear-gradient(135deg, var(--accent2), var(--accent));
+            border-color: transparent;
+            color: white;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 20px 60px; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 { font-size: 1.2rem; margin-bottom: 16px; font-weight: 600; }
+
+        textarea, select, input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus, select:focus, input[type="text"]:focus { border-color: var(--accent); }
+        textarea { resize: vertical; min-height: 100px; }
+
+        label { display: block; margin-bottom: 8px; color: var(--text-dim); font-size: 0.9rem; font-weight: 500; }
+        .form-group { margin-bottom: 16px; }
+        .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 12px; border: none;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; width: 100%; justify-content: center;
+        }
+
+        .btn-primary { background: linear-gradient(135deg, var(--accent2), var(--accent)); color: white; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .score-container { text-align: center; padding: 32px 0; }
+
+        .score-circle {
+            width: 140px; height: 140px; border-radius: 50%;
+            display: inline-flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            border: 4px solid var(--border); margin-bottom: 12px;
+        }
+
+        .score-circle.green { border-color: var(--green); }
+        .score-circle.blue { border-color: var(--blue); }
+        .score-circle.yellow { border-color: var(--yellow); }
+        .score-circle.red { border-color: var(--red); }
+
+        .score-number { font-size: 2.8rem; font-weight: 800; line-height: 1; }
+        .score-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; margin-top: 4px; }
+
+        .green .score-number, .green .score-label { color: var(--green); }
+        .blue .score-number, .blue .score-label { color: var(--blue); }
+        .yellow .score-number, .yellow .score-label { color: var(--yellow); }
+        .red .score-number, .red .score-label { color: var(--red); }
+
+        .breakdown { margin-top: 20px; }
+
+        .breakdown-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+        .breakdown-label {
+            font-size: 0.85rem; color: var(--text-dim);
+            width: 110px; flex-shrink: 0; text-transform: capitalize;
+        }
+
+        .breakdown-bar { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+
+        .breakdown-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            transition: width 0.6s ease;
+        }
+
+        .breakdown-value { font-size: 0.85rem; font-weight: 600; width: 36px; text-align: right; }
+
+        .tip {
+            display: flex; gap: 10px; padding: 12px 16px;
+            background: var(--surface2); border-radius: 10px;
+            margin-bottom: 8px; font-size: 0.9rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        .tip-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+        .hook-result {
+            padding: 16px; background: var(--surface2);
+            border-radius: 12px; margin-bottom: 10px;
+            border: 1px solid var(--border); cursor: pointer;
+            transition: all 0.2s; position: relative;
+        }
+
+        .hook-result:hover { border-color: var(--accent); transform: translateX(4px); }
+
+        .hook-text { font-size: 1rem; line-height: 1.5; margin-bottom: 8px; font-weight: 500; }
+        .hook-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+        .hook-tag {
+            padding: 4px 10px; border-radius: 6px;
+            font-size: 0.75rem; font-weight: 600;
+            background: rgba(225, 48, 108, 0.15); color: var(--accent);
+        }
+
+        .hook-source-tag {
+            padding: 4px 10px; border-radius: 6px;
+            font-size: 0.75rem; font-weight: 600;
+            background: rgba(59, 130, 246, 0.15); color: var(--blue);
+        }
+
+        .hook-score-small { font-size: 0.8rem; color: var(--green); font-weight: 600; }
+
+        .copied-toast {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--green); color: white;
+            padding: 12px 24px; border-radius: 10px; font-weight: 600;
+            transition: transform 0.3s ease; z-index: 100;
+        }
+
+        .copied-toast.show { transform: translateX(-50%) translateY(0); }
+
+        .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .type-card {
+            padding: 16px; background: var(--surface2);
+            border-radius: 12px; border: 1px solid var(--border);
+        }
+
+        .type-card h3 { font-size: 0.95rem; margin-bottom: 6px; color: var(--accent); }
+        .type-card p { font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; }
+
+        .type-card .example {
+            margin-top: 10px; padding: 10px; background: var(--bg);
+            border-radius: 8px; font-size: 0.85rem; font-style: italic; color: var(--text);
+        }
+
+        .spinner {
+            display: inline-block; width: 24px; height: 24px;
+            border: 3px solid var(--border); border-top-color: var(--accent);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .emotions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+        .emotion-tag {
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 500;
+            background: rgba(131, 58, 180, 0.15); color: var(--accent2);
+        }
+
+        #results, #genResults, #trendResults, #abResults { display: none; }
+
+        /* Trending Styles */
+        .trend-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; background: var(--surface2);
+            border-radius: 10px; margin-bottom: 6px;
+            border: 1px solid var(--border); font-size: 0.9rem;
+        }
+
+        .trend-title { flex: 1; font-weight: 500; }
+        .trend-source { font-size: 0.75rem; color: var(--text-dim); margin-left: 12px; }
+
+        .keyword-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+        .keyword-tag {
+            padding: 6px 14px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 500;
+            background: rgba(247, 119, 55, 0.15); color: var(--accent3);
+            border: 1px solid rgba(247, 119, 55, 0.25);
+        }
+
+        .fetch-time { font-size: 0.8rem; color: var(--text-dim); margin-top: 12px; text-align: right; }
+
+        /* A/B Test Styles */
+        .ab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .ab-card {
+            background: var(--surface2); border-radius: 14px;
+            padding: 20px; border: 2px solid var(--border);
+            transition: border-color 0.3s;
+        }
+
+        .ab-card.winner { border-color: var(--green); }
+        .ab-card.loser { border-color: var(--border); opacity: 0.8; }
+
+        .ab-label {
+            font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
+            margin-bottom: 8px; text-transform: uppercase;
+        }
+
+        .ab-label.a { color: var(--accent); }
+        .ab-label.b { color: var(--blue); }
+
+        .ab-hook-text { font-size: 1rem; font-weight: 500; line-height: 1.5; margin-bottom: 16px; }
+
+        .ab-score {
+            font-size: 2rem; font-weight: 800; text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .ab-rating { text-align: center; font-size: 0.8rem; font-weight: 600; letter-spacing: 1px; }
+
+        .verdict-card {
+            text-align: center; padding: 24px;
+            background: var(--surface2); border-radius: 14px;
+            margin: 20px 0; border: 2px solid var(--green);
+        }
+
+        .verdict-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 8px; }
+        .verdict-detail { color: var(--text-dim); font-size: 0.95rem; }
+
+        .comparison-row {
+            display: grid; grid-template-columns: 100px 1fr 40px 1fr 40px;
+            gap: 8px; align-items: center; margin-bottom: 10px;
+            padding: 10px 14px; background: var(--surface2);
+            border-radius: 10px;
+        }
+
+        .comp-cat { font-size: 0.85rem; color: var(--text-dim); font-weight: 500; }
+
+        .comp-bar {
+            height: 8px; border-radius: 4px; overflow: hidden;
+            background: var(--bg);
+        }
+
+        .comp-fill-a {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            transition: width 0.6s;
+        }
+
+        .comp-fill-b {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--blue), #60a5fa);
+            transition: width 0.6s;
+        }
+
+        .comp-val { font-size: 0.85rem; font-weight: 600; text-align: center; }
+        .comp-val.winning { color: var(--green); }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.8rem; }
+            .row, .ab-grid { grid-template-columns: 1fr; }
+            .type-grid { grid-template-columns: 1fr; }
+            .comparison-row { grid-template-columns: 80px 1fr 30px 1fr 30px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>HookViral</h1>
+    <p>Analyze & generate viral Instagram hooks backed by data</p>
+</div>
+
+<div class="tabs">
+    <div class="tab active" onclick="switchTab('analyze')">Analyze</div>
+    <div class="tab" onclick="switchTab('generate')">Generate</div>
+    <div class="tab" onclick="switchTab('trending')">Trending</div>
+    <div class="tab" onclick="switchTab('abtest')">A/B Test</div>
+    <div class="tab" onclick="switchTab('browse')">Library</div>
+</div>
+
+<div class="container">
+
+    <!-- ANALYZE TAB -->
+    <div id="analyzePanel" class="panel active">
+        <div class="card">
+            <h2>Paste your hook below</h2>
+            <div class="form-group">
+                <textarea id="hookInput" placeholder="e.g. Nobody talks about this fitness hack but it changed my life in 30 days..."></textarea>
+            </div>
+            <button class="btn btn-primary" id="analyzeBtn" onclick="analyzeHook()">Analyze Viral Potential</button>
+        </div>
+
+        <div id="results">
+            <div class="card">
+                <div class="score-container">
+                    <div class="score-circle" id="scoreCircle">
+                        <div class="score-number" id="scoreNumber">--</div>
+                        <div class="score-label" id="scoreLabel">SCORE</div>
+                    </div>
+                    <div class="emotions" id="emotionTags"></div>
+                </div>
+                <div class="breakdown" id="breakdown"></div>
+            </div>
+            <div class="card">
+                <h2>Improvement Tips</h2>
+                <div id="tips"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GENERATE TAB -->
+    <div id="generatePanel" class="panel">
+        <div class="card">
+            <h2>Generate viral hooks for your niche</h2>
+            <div class="row">
+                <div class="form-group">
+                    <label>Your Niche</label>
+                    <select id="nicheSelect">
+                        {% for niche in niches %}
+                        <option value="{{ niche }}">{{ niche|title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Hook Style (optional)</label>
+                    <select id="typeSelect">
+                        <option value="">All Styles</option>
+                        {% for key, data in hook_types.items() %}
+                        <option value="{{ key }}">{{ data.label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="generateBtn" onclick="generateHooks()">Generate 10 Hooks</button>
+        </div>
+
+        <div id="genResults">
+            <div class="card">
+                <h2>Your Generated Hooks <span style="color:var(--text-dim);font-weight:400;font-size:0.85rem;">(click to copy)</span></h2>
+                <div id="hooksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRENDING TAB -->
+    <div id="trendingPanel" class="panel">
+        <div class="card">
+            <h2>Trending Hooks (Real-Time)</h2>
+            <p style="color:var(--text-dim);margin-bottom:16px;">Fetches what's trending right now and generates hooks you can post today.</p>
+            <div class="form-group">
+                <label>Your Niche (optional — hooks will be tailored)</label>
+                <select id="trendNicheSelect">
+                    <option value="">General / Any Niche</option>
+                    {% for niche in niches %}
+                    <option value="{{ niche }}">{{ niche|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-primary" id="trendBtn" onclick="fetchTrending()">Fetch Trending Hooks</button>
+        </div>
+
+        <div id="trendResults">
+            <div class="card">
+                <h2>What's Trending Right Now</h2>
+                <div id="trendingTopics"></div>
+                <div class="fetch-time" id="fetchTime"></div>
+            </div>
+
+            <div class="card">
+                <h2>Trending Keywords</h2>
+                <div class="keyword-cloud" id="keywordCloud"></div>
+            </div>
+
+            <div class="card">
+                <h2>Hooks Based on Trends <span style="color:var(--text-dim);font-weight:400;font-size:0.85rem;">(click to copy)</span></h2>
+                <div id="trendHooksList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- A/B TEST TAB -->
+    <div id="abtestPanel" class="panel">
+        <div class="card">
+            <h2>A/B Test Your Hooks</h2>
+            <p style="color:var(--text-dim);margin-bottom:16px;">Compare two hooks head-to-head. Find out which one will perform better.</p>
+            <div class="form-group">
+                <label>Hook A</label>
+                <textarea id="hookA" style="min-height:70px" placeholder="Enter your first hook..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Hook B</label>
+                <textarea id="hookB" style="min-height:70px" placeholder="Enter your second hook..."></textarea>
+            </div>
+            <button class="btn btn-primary" id="abBtn" onclick="runABTest()">Compare Hooks</button>
+        </div>
+
+        <div id="abResults">
+            <!-- Verdict -->
+            <div class="verdict-card" id="verdictCard">
+                <div class="verdict-title" id="verdictTitle"></div>
+                <div class="verdict-detail" id="verdictDetail"></div>
+            </div>
+
+            <!-- Side by side scores -->
+            <div class="ab-grid">
+                <div class="ab-card" id="abCardA">
+                    <div class="ab-label a">Hook A</div>
+                    <div class="ab-hook-text" id="abTextA"></div>
+                    <div class="ab-score" id="abScoreA"></div>
+                    <div class="ab-rating" id="abRatingA"></div>
+                    <div class="emotions" id="abEmotionsA" style="margin-top:12px;justify-content:center;"></div>
+                </div>
+                <div class="ab-card" id="abCardB">
+                    <div class="ab-label b">Hook B</div>
+                    <div class="ab-hook-text" id="abTextB"></div>
+                    <div class="ab-score" id="abScoreB"></div>
+                    <div class="ab-rating" id="abRatingB"></div>
+                    <div class="emotions" id="abEmotionsB" style="margin-top:12px;justify-content:center;"></div>
+                </div>
+            </div>
+
+            <!-- Category comparison -->
+            <div class="card" style="margin-top:20px;">
+                <h2>Category Breakdown</h2>
+                <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+                    <span style="font-size:0.8rem;color:var(--accent);font-weight:600;">HOOK A</span>
+                    <span style="font-size:0.8rem;color:var(--blue);font-weight:600;">HOOK B</span>
+                </div>
+                <div id="abComparison"></div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="card">
+                <h2>Recommendations</h2>
+                <div id="abTips"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BROWSE TAB -->
+    <div id="browsePanel" class="panel">
+        <div class="card">
+            <h2>Hook Formula Library</h2>
+            <p style="color:var(--text-dim);margin-bottom:20px;">Proven formulas used in top-performing Instagram content.</p>
+            <div class="type-grid">
+                {% for key, data in hook_types.items() %}
+                <div class="type-card">
+                    <h3>{{ data.label }}</h3>
+                    <p>{{ data.description }}</p>
+                    <div class="example">"{{ data.templates[0] }}"</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="copied-toast" id="toast">Copied to clipboard!</div>
+
+<script>
+function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById(tab + 'Panel').classList.add('active');
+}
+
+async function analyzeHook() {
+    const hook = document.getElementById('hookInput').value.trim();
+    if (!hook) return;
+    const btn = document.getElementById('analyzeBtn');
+    btn.disabled = true; btn.textContent = 'Analyzing...';
+    try {
+        const resp = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ hook }),
+        });
+        const data = await resp.json();
+        document.getElementById('results').style.display = 'block';
+        const circle = document.getElementById('scoreCircle');
+        circle.className = 'score-circle ' + data.rating_color;
+        document.getElementById('scoreNumber').textContent = data.score;
+        document.getElementById('scoreLabel').textContent = data.rating;
+        const emotionTags = document.getElementById('emotionTags');
+        emotionTags.innerHTML = '';
+        for (const [emotion] of Object.entries(data.emotions_triggered)) {
+            emotionTags.innerHTML += `<span class="emotion-tag">${emotion.replace('_', ' ')}</span>`;
+        }
+        const breakdown = document.getElementById('breakdown');
+        breakdown.innerHTML = '';
+        const labels = { power_words:'Power Words', emotion:'Emotion', pattern:'Pattern', structure:'Structure', length:'Length', specificity:'Specificity' };
+        for (const [key, val] of Object.entries(data.breakdown)) {
+            breakdown.innerHTML += `
+                <div class="breakdown-item">
+                    <div class="breakdown-label">${labels[key]||key}</div>
+                    <div class="breakdown-bar"><div class="breakdown-fill" style="width:${val}%"></div></div>
+                    <div class="breakdown-value">${val}</div>
+                </div>`;
+        }
+        const tips = document.getElementById('tips');
+        tips.innerHTML = '';
+        for (const tip of data.tips) {
+            tips.innerHTML += `<div class="tip"><span class="tip-icon">&#x2192;</span>${tip}</div>`;
+        }
+    } catch (err) { console.error(err); }
+    btn.disabled = false; btn.textContent = 'Analyze Viral Potential';
+}
+
+async function generateHooks() {
+    const niche = document.getElementById('nicheSelect').value;
+    const hookType = document.getElementById('typeSelect').value;
+    const btn = document.getElementById('generateBtn');
+    btn.disabled = true; btn.textContent = 'Generating...';
+    try {
+        const resp = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ niche, hook_type: hookType || null, count: 10 }),
+        });
+        const data = await resp.json();
+        document.getElementById('genResults').style.display = 'block';
+        const list = document.getElementById('hooksList');
+        list.innerHTML = '';
+        for (const h of data.hooks) {
+            const safe = h.hook.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            list.innerHTML += `
+                <div class="hook-result" onclick="copyHook('${safe}')">
+                    <div class="hook-text">${h.hook}</div>
+                    <div class="hook-meta">
+                        <span class="hook-tag">${h.type}</span>
+                        <span class="hook-score-small">${h.viral_potential}% viral potential</span>
+                    </div>
+                </div>`;
+        }
+    } catch (err) { console.error(err); }
+    btn.disabled = false; btn.textContent = 'Generate 10 Hooks';
+}
+
+async function fetchTrending() {
+    const niche = document.getElementById('trendNicheSelect').value;
+    const btn = document.getElementById('trendBtn');
+    btn.disabled = true; btn.textContent = 'Fetching live trends...';
+    try {
+        const resp = await fetch('/api/trending', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ niche: niche || null, count: 10 }),
+        });
+        const data = await resp.json();
+        document.getElementById('trendResults').style.display = 'block';
+
+        // Trending topics
+        const topicsEl = document.getElementById('trendingTopics');
+        topicsEl.innerHTML = '';
+        for (const t of data.trending_topics) {
+            topicsEl.innerHTML += `
+                <div class="trend-item">
+                    <span class="trend-title">${t.title}</span>
+                    <span class="trend-source">${t.source}</span>
+                </div>`;
+        }
+
+        // Fetch time
+        document.getElementById('fetchTime').textContent = `Fetched: ${data.fetched_at} | Sources: Reddit (${data.sources_count.reddit}), Google Trends (${data.sources_count.google_trends})`;
+
+        // Keywords
+        const cloudEl = document.getElementById('keywordCloud');
+        cloudEl.innerHTML = '';
+        for (const kw of data.trending_keywords) {
+            cloudEl.innerHTML += `<span class="keyword-tag">${kw}</span>`;
+        }
+
+        // Hooks
+        const hooksEl = document.getElementById('trendHooksList');
+        hooksEl.innerHTML = '';
+        for (const h of data.hooks) {
+            const safe = h.hook.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            hooksEl.innerHTML += `
+                <div class="hook-result" onclick="copyHook('${safe}')">
+                    <div class="hook-text">${h.hook}</div>
+                    <div class="hook-meta">
+                        <span class="hook-tag">${h.type}</span>
+                        <span class="hook-source-tag">Based on: ${h.based_on}</span>
+                    </div>
+                </div>`;
+        }
+    } catch (err) { console.error(err); }
+    btn.disabled = false; btn.textContent = 'Fetch Trending Hooks';
+}
+
+async function runABTest() {
+    const hookA = document.getElementById('hookA').value.trim();
+    const hookB = document.getElementById('hookB').value.trim();
+    if (!hookA || !hookB) return;
+    const btn = document.getElementById('abBtn');
+    btn.disabled = true; btn.textContent = 'Comparing...';
+    try {
+        const resp = await fetch('/api/ab-test', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ hook_a: hookA, hook_b: hookB }),
+        });
+        const data = await resp.json();
+        document.getElementById('abResults').style.display = 'block';
+
+        // Verdict
+        const verdictCard = document.getElementById('verdictCard');
+        if (data.verdict === 'TIE') {
+            document.getElementById('verdictTitle').textContent = "It's a Tie!";
+            verdictCard.style.borderColor = 'var(--yellow)';
+        } else {
+            document.getElementById('verdictTitle').textContent = `Hook ${data.verdict} Wins!`;
+            verdictCard.style.borderColor = 'var(--green)';
+        }
+        document.getElementById('verdictDetail').textContent = data.verdict_detail;
+
+        // Hook A card
+        const cardA = document.getElementById('abCardA');
+        cardA.className = 'ab-card ' + (data.verdict === 'A' ? 'winner' : data.verdict === 'B' ? 'loser' : '');
+        document.getElementById('abTextA').textContent = data.hook_a.text;
+        document.getElementById('abScoreA').textContent = data.hook_a.score;
+        document.getElementById('abScoreA').style.color = `var(--${data.hook_a.rating_color})`;
+        document.getElementById('abRatingA').textContent = data.hook_a.rating;
+        document.getElementById('abRatingA').style.color = `var(--${data.hook_a.rating_color})`;
+        const emA = document.getElementById('abEmotionsA');
+        emA.innerHTML = '';
+        for (const e of data.hook_a.emotions) {
+            emA.innerHTML += `<span class="emotion-tag">${e.replace('_',' ')}</span>`;
+        }
+
+        // Hook B card
+        const cardB = document.getElementById('abCardB');
+        cardB.className = 'ab-card ' + (data.verdict === 'B' ? 'winner' : data.verdict === 'A' ? 'loser' : '');
+        document.getElementById('abTextB').textContent = data.hook_b.text;
+        document.getElementById('abScoreB').textContent = data.hook_b.score;
+        document.getElementById('abScoreB').style.color = `var(--${data.hook_b.rating_color})`;
+        document.getElementById('abRatingB').textContent = data.hook_b.rating;
+        document.getElementById('abRatingB').style.color = `var(--${data.hook_b.rating_color})`;
+        const emB = document.getElementById('abEmotionsB');
+        emB.innerHTML = '';
+        for (const e of data.hook_b.emotions) {
+            emB.innerHTML += `<span class="emotion-tag">${e.replace('_',' ')}</span>`;
+        }
+
+        // Category comparison
+        const compEl = document.getElementById('abComparison');
+        compEl.innerHTML = '';
+        for (const c of data.comparison) {
+            const aWin = c.winner === 'A' ? 'winning' : '';
+            const bWin = c.winner === 'B' ? 'winning' : '';
+            compEl.innerHTML += `
+                <div class="comparison-row">
+                    <div class="comp-cat">${c.category}</div>
+                    <div class="comp-bar"><div class="comp-fill-a" style="width:${c.score_a}%"></div></div>
+                    <div class="comp-val ${aWin}">${c.score_a}</div>
+                    <div class="comp-bar"><div class="comp-fill-b" style="width:${c.score_b}%"></div></div>
+                    <div class="comp-val ${bWin}">${c.score_b}</div>
+                </div>`;
+        }
+
+        // Recommendations
+        const tipsEl = document.getElementById('abTips');
+        tipsEl.innerHTML = '';
+        for (const tip of data.recommendations) {
+            tipsEl.innerHTML += `<div class="tip"><span class="tip-icon">&#x2192;</span>${tip}</div>`;
+        }
+
+    } catch (err) { console.error(err); }
+    btn.disabled = false; btn.textContent = 'Compare Hooks';
+}
+
+function copyHook(text) {
+    navigator.clipboard.writeText(text);
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+document.getElementById('hookInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); analyzeHook(); }
+});
+</script>
+
+</body>
+</html>
